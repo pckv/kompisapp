@@ -22,11 +22,11 @@ public class CreateUserViewModel extends ViewModel {
         this.createUserDataSource = createUserDataSource;
     }
 
-    LiveData<CreateUserFormState> getCreateUserFormState() {
+    public LiveData<CreateUserFormState> getCreateUserFormState() {
         return createUserFormState;
     }
 
-    LiveData<CreateUserResult> getCreateUserResult() {
+    public LiveData<CreateUserResult> getCreateUserResult() {
         return createUserResult;
     }
 
