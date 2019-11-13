@@ -1,17 +1,17 @@
 package me.pckv.kompisapp.ui.user.login;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Patterns;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.LoginRepository;
 import me.pckv.kompisapp.data.Result;
 import me.pckv.kompisapp.data.model.LoggedInUser;
-import me.pckv.kompisapp.R;
 
 public class LoginViewModel extends ViewModel {
 
@@ -23,11 +23,11 @@ public class LoginViewModel extends ViewModel {
         this.loginRepository = loginRepository;
     }
 
-    LiveData<LoginFormState> getLoginFormState() {
+    public LiveData<LoginFormState> getLoginFormState() {
         return loginFormState;
     }
 
-    LiveData<LoginResult> getLoginResult() {
+    public LiveData<LoginResult> getLoginResult() {
         return loginResult;
     }
 

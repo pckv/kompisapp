@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * Authentication result : success or error message.
  */
-class CreateUserResult {
+public class CreateUserResult {
 
     @Getter
     private boolean success;
@@ -25,7 +25,7 @@ class CreateUserResult {
     }
 
     @Nullable
-    Integer getError() {
+    public Integer getError() {
         return error;
     }
 }

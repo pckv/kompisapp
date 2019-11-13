@@ -2,12 +2,6 @@ package me.pckv.kompisapp.data;
 
 import com.alibaba.fastjson.JSON;
 
-import org.json.JSONObject;
-
-import me.pckv.kompisapp.data.model.LoggedInUser;
-import me.pckv.kompisapp.data.model.LoginUser;
-import me.pckv.kompisapp.data.model.User;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +9,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+
+import me.pckv.kompisapp.Endpoints;
+import me.pckv.kompisapp.data.model.LoggedInUser;
+import me.pckv.kompisapp.data.model.LoginUser;
+import me.pckv.kompisapp.data.model.User;
 
 /**
  * Class that handles authentication w/ createUser credentials and retrieves user information.

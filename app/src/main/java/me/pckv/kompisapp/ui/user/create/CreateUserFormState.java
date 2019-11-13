@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 /**
  * Data validation state of the createUser form.
  */
-class CreateUserFormState {
+public class CreateUserFormState {
     @Nullable
     private Integer emailError;
     @Nullable
@@ -29,21 +29,21 @@ class CreateUserFormState {
     }
 
     @Nullable
-    Integer getEmailError() {
+    public Integer getEmailError() {
         return emailError;
     }
 
     @Nullable
-    Integer getPasswordError() {
+    public Integer getPasswordError() {
         return passwordError;
     }
 
     @Nullable
-    Integer getDisplayNameError() {
+    public Integer getDisplayNameError() {
         return displayNameError;
     }
 
-    boolean isDataValid() {
+    public boolean isDataValid() {
         return isDataValid;
     }
 }

@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import me.pckv.kompisapp.data.CreateUserDataSource;
-import me.pckv.kompisapp.data.LoginDataSource;
-import me.pckv.kompisapp.data.LoginRepository;
 
 /**
  * ViewModel provider factory to instantiate CreateUserViewModel.

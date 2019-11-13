@@ -1,4 +1,4 @@
-package me.pckv.kompisapp.data;
+package me.pckv.kompisapp;
 
 import java.net.MalformedURLException;
 import java.net.URL;

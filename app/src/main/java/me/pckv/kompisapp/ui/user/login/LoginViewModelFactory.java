@@ -1,8 +1,8 @@
 package me.pckv.kompisapp.ui.user.login;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.annotation.NonNull;
 
 import me.pckv.kompisapp.data.LoginDataSource;
 import me.pckv.kompisapp.data.LoginRepository;
