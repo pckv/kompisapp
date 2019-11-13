@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import me.pckv.kompisapp.ui.login.LoginActivity;
+import me.pckv.kompisapp.ui.user.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 

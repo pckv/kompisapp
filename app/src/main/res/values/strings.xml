@@ -1,12 +1,17 @@
 <resources>
     <string name="app_name">Kompis</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="prompt_display_name">Display name</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_up">Sign up</string>
     <string name="welcome">"Welcome "</string>
     <string name="invalid_email">Not a valid email</string>
     <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_display_name">Display name must be >1 character</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="create_user_failed">"Failed to create user"</string>
+    <string name="created_user">"User created"</string>
 </resources>

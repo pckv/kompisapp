@@ -1,4 +1,4 @@
-package me.pckv.kompisapp.ui.login;
+package me.pckv.kompisapp.ui.user.login;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -8,8 +8,8 @@ import me.pckv.kompisapp.data.LoginDataSource;
 import me.pckv.kompisapp.data.LoginRepository;
 
 /**
- * ViewModel provider factory to instantiate LoginViewModel.
- * Required given LoginViewModel has a non-empty constructor
+ * ViewModel provider factory to instantiate CreateUserViewModel.
+ * Required given CreateUserViewModel has a non-empty constructor
  */
 public class LoginViewModelFactory implements ViewModelProvider.Factory {
 

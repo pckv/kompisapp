@@ -1,4 +1,4 @@
-package me.pckv.kompisapp.ui.login;
+package me.pckv.kompisapp.ui.user.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

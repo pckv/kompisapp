@@ -1,9 +1,9 @@
-package me.pckv.kompisapp.ui.login;
+package me.pckv.kompisapp.ui.user.login;
 
 import androidx.annotation.Nullable;
 
 /**
- * Data validation state of the login form.
+ * Data validation state of the createUser form.
  */
 class LoginFormState {
     @Nullable

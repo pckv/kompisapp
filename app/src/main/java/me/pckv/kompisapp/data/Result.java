@@ -28,6 +28,10 @@ public class Result<T> {
             this.data = data;
         }
 
+        public Success() {
+            this.data = null;
+        }
+
         public T getData() {
             return this.data;
         }

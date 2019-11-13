@@ -17,7 +17,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Class that handles authentication w/ login credentials and retrieves user information.
+ * Class that handles authentication w/ createUser credentials and retrieves user information.
  */
 public class LoginDataSource {
 
@@ -30,7 +30,7 @@ public class LoginDataSource {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestMethod("POST");
 
-            LoginUser loginUser = new LoginUser(email, password);
+            LoginUser loginUser = new LoginUser(email.trim(), password.trim());
             String json = JSON.toJSONString(loginUser);
 
             // Write the JSON object
@@ -51,7 +51,7 @@ public class LoginDataSource {
 
                 return new Result.Success<>(new LoggedInUser(token, email, user.getDisplayName()));
             } else {
-                return new Result.Error(new IOException("Error logging in " + connection.getResponseMessage()));
+                return new Result.Error(new IOException("Error logging in: " + connection.getResponseMessage()));
             }
         } catch (Exception e) {
             e.printStackTrace();
