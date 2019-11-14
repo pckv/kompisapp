@@ -31,4 +31,20 @@ public class ListingRepository {
     public Result<List<Listing>> getListings() {
         return listingDatasource.getListings(usersRepository.getToken());
     }
+
+    public DatalessResult activateListing(long listingId) {
+        return listingDatasource.activateListing(usersRepository.getToken(), listingId);
+    }
+
+    public DatalessResult deactivateListing(long listingId) {
+        return listingDatasource.deactivateListing(usersRepository.getToken(), listingId);
+    }
+
+    public DatalessResult assignListing(long listingId) {
+        return listingDatasource.assignListing(usersRepository.getToken(), listingId);
+    }
+
+    public DatalessResult unassignListing(long listingId) {
+        return listingDatasource.unassignListing(usersRepository.getToken(), listingId);
+    }
 }
