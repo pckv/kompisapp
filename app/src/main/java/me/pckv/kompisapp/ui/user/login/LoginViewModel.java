@@ -9,18 +9,18 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.LoginRepository;
 import me.pckv.kompisapp.data.Result;
+import me.pckv.kompisapp.data.UsersRepository;
 import me.pckv.kompisapp.data.model.LoggedInUser;
 
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    private UsersRepository usersRepository;
 
-    LoginViewModel(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
+    LoginViewModel(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
     }
 
     public LiveData<LoginFormState> getLoginFormState() {
@@ -36,7 +36,7 @@ public class LoginViewModel extends ViewModel {
         new AsyncTask<Void, Void, Result>() {
             @Override
             protected Result doInBackground(Void... voids) {
-                return loginRepository.login(email, password);
+                return usersRepository.login(email, password);
             }
 
             @Override
