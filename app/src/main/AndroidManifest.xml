@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="me.pckv.kompisapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,9 +12,14 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.user.create.CreateUserActivity"></activity>
-        <activity android:name=".ui.listing.create.CreateListingActivity"></activity>
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".ui.listing.list.ListingsActivity"
+            android:label="@string/title_activity_listings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.user.create.CreateUserActivity" />
+        <activity android:name=".ui.listing.create.CreateListingActivity" />
         <activity
             android:name=".ui.user.login.LoginActivity"
             android:label="@string/title_activity_login" />

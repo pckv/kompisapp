@@ -1,5 +1,9 @@
 package me.pckv.kompisapp.data;
 
+import java.util.List;
+
+import me.pckv.kompisapp.data.model.Listing;
+
 public class ListingRepository {
 
     private static volatile ListingRepository instance;
@@ -22,5 +26,9 @@ public class ListingRepository {
 
     public DatalessResult createListing(String title, boolean driver) {
         return listingDatasource.createListing(usersRepository.getToken(), title, driver);
+    }
+
+    public Result<List<Listing>> getListings() {
+        return listingDatasource.getListings(usersRepository.getToken());
     }
 }
