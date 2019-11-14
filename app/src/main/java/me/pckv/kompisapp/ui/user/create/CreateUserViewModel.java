@@ -9,17 +9,17 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.CreateUserDataSource;
 import me.pckv.kompisapp.data.DatalessResult;
+import me.pckv.kompisapp.data.UsersRepository;
 
 public class CreateUserViewModel extends ViewModel {
 
     private MutableLiveData<CreateUserFormState> createUserFormState = new MutableLiveData<>();
     private MutableLiveData<CreateUserResult> createUserResult = new MutableLiveData<>();
-    private CreateUserDataSource createUserDataSource;
+    private UsersRepository usersRepository;
 
-    public CreateUserViewModel(CreateUserDataSource createUserDataSource) {
-        this.createUserDataSource = createUserDataSource;
+    public CreateUserViewModel(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
     }
 
     public LiveData<CreateUserFormState> getCreateUserFormState() {
@@ -35,7 +35,7 @@ public class CreateUserViewModel extends ViewModel {
         new AsyncTask<Void, Void, DatalessResult>() {
             @Override
             protected DatalessResult doInBackground(Void... voids) {
-                return createUserDataSource.createUser(displayName, email, password);
+                return usersRepository.createUser(displayName, email, password);
             }
 
             @Override
