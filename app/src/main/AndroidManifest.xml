@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.user.create.CreateUserActivity"></activity>
+        <activity android:name=".ui.listing.create.CreateListingActivity"></activity>
         <activity
             android:name=".ui.user.login.LoginActivity"
             android:label="@string/title_activity_login" />
