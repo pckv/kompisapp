@@ -34,7 +34,7 @@ public class ListingViewModel extends ViewModel {
             protected DatalessResult doInBackground(Void... voids) {
                 return listingRepository.activateListing(listingId);
             }
-        };
+        }.execute();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -44,7 +44,7 @@ public class ListingViewModel extends ViewModel {
             protected DatalessResult doInBackground(Void... voids) {
                 return listingRepository.deactivateListing(listingId);
             }
-        };
+        }.execute();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -54,7 +54,7 @@ public class ListingViewModel extends ViewModel {
             protected DatalessResult doInBackground(Void... voids) {
                 return listingRepository.assignListing(listingId);
             }
-        };
+        }.execute();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -64,6 +64,6 @@ public class ListingViewModel extends ViewModel {
             protected DatalessResult doInBackground(Void... voids) {
                 return listingRepository.unassignListing(listingId);
             }
-        };
+        }.execute();
     }
 }

@@ -2,6 +2,7 @@ package me.pckv.kompisapp.ui.listing.view;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -20,7 +21,7 @@ public class ListingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listings);
+        setContentView(R.layout.activity_listing);
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
@@ -37,7 +38,7 @@ public class ListingActivity extends AppCompatActivity {
         final TextView titleTextView = findViewById(R.id.title);
         final TextView ownerNameTextView = findViewById(R.id.owner_name);
         final TextView distanceTextView = findViewById(R.id.distance);
-        final TextView assignee = findViewById(R.id.assignee);
+        final TextView assigneeTextView = findViewById(R.id.assignee);
         final Switch assignSwitch = findViewById(R.id.assign);
         final Switch activateSwitch = findViewById(R.id.activate);
 
@@ -46,11 +47,10 @@ public class ListingActivity extends AppCompatActivity {
         distanceTextView.setText("5 km");
 
         if (listing.hasAssignee()) {
-            assignee.setText(listing.getAssignee().getDisplayName());
+            assigneeTextView.setText(listing.getAssignee().getDisplayName());
         } else {
-            assignee.setVisibility(View.INVISIBLE);
+            assigneeTextView.setVisibility(View.INVISIBLE);
         }
-
 
         if (!listingViewModel.isOwner(listing) && (listing.hasAssignee() && !listingViewModel.isAssignee(listing))) {
             assignSwitch.setVisibility(View.INVISIBLE);
@@ -64,5 +64,27 @@ public class ListingActivity extends AppCompatActivity {
         } else {
             activateSwitch.setChecked(listing.isActive());
         }
+
+        activateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    listingViewModel.actiavteListing();
+                } else {
+                    listingViewModel.deactiavteListing();
+                }
+            }
+        });
+
+        assignSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    listingViewModel.assignListing();
+                } else {
+                    listingViewModel.unassignListing();
+                }
+            }
+        });
     }
 }
