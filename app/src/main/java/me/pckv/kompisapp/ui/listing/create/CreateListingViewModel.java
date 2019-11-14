@@ -17,8 +17,7 @@ public class CreateListingViewModel extends ViewModel {
     private MutableLiveData<CreateListingResult> createListingResult = new MutableLiveData<>();
     private ListingDatasource listingDatasource;
 
-    public CreateListingViewModel(ListingDatasource listingDatasource) {
-        this.listingDatasource = listingDatasource;
+    public CreateListingViewModel() {
     }
 
     public LiveData<CreateListingFormState> getCreateListingFormState() {
