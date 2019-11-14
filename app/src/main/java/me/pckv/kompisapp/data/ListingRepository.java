@@ -24,6 +24,18 @@ public class ListingRepository {
         return instance;
     }
 
+    public boolean isOwner(Listing listing) {
+        return usersRepository.getUser().getId() == listing.getOwner().getId();
+    }
+
+    public boolean isAssignee(Listing listing) {
+        if (listing.getAssignee() == null) {
+            return false;
+        }
+
+        return usersRepository.getUser().getId() == listing.getAssignee().getId();
+    }
+
     public DatalessResult createListing(String title, boolean driver) {
         return listingDatasource.createListing(usersRepository.getToken(), title, driver);
     }

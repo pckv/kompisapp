@@ -11,6 +11,7 @@ import lombok.Data;
 public class LoggedInUser {
 
     private String token;
+    private long id;
     private String email;
     private String displayName;
 }
