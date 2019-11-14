@@ -1,6 +1,9 @@
 package me.pckv.kompisapp.ui.listing.create;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,14 +55,53 @@ public class CreateListingActivity extends AppCompatActivity {
                 }
                 loadingProgressBar.setVisibility(View.GONE);
                 if (createListingResult.getError() != null) {
-                    showCreateListingFailed()
+                    showCreateListingFailed(createListingResult.getError());
+                }
+                if (createListingResult.isSuccess()) {
+                    showCreateListingSuccess();
+                    setResult(Activity.RESULT_OK);
+                    finish();
                 }
             }
         });
+
+        TextWatcher afterTextChangedListener = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                createListingViewModel.createListingDataChanged(
+                        titleEditText.getText().toString()
+                );
+            }
+        };
+
+        titleEditText.addTextChangedListener(afterTextChangedListener);
+
+        createListingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                createListingViewModel.createListing(
+                        titleEditText.getText().toString(),
+                        driverSwitch.isChecked()
+                );
+            }
+        });
+
+
     }
 
     private void showCreateListingSuccess() {
-        Toast.makeText(getApplicationContext(), R.string.created_user, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.listing_created, Toast.LENGTH_SHORT).show();
     }
 
     private void showCreateListingFailed(@StringRes Integer errorString) {

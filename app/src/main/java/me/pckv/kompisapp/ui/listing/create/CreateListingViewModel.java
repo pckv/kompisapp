@@ -48,7 +48,7 @@ public class CreateListingViewModel extends ViewModel {
         }.execute();
     }
 
-    public void createListingDataChanged(String title, boolean driver) {
+    public void createListingDataChanged(String title) {
         if (!isTitleValid(title)) {
             createListingFormState.setValue(new CreateListingFormState(R.string.invalid_title));
         } else {

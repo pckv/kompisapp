@@ -18,4 +18,5 @@
     <string name="action_create_listing">Create listing</string>
     <string name="create_listing_failed">Failed to create listing</string>
     <string name="invalid_title">Title is required</string>
+    <string name="listing_created">Listing created</string>
 </resources>
