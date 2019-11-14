@@ -7,25 +7,22 @@ import me.pckv.kompisapp.data.model.LoggedInUser;
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of createUser status and user credentials information.
  */
-public class LoginRepository {
+public class UsersRepository {
 
-    private static volatile LoginRepository instance;
+    private static volatile UsersRepository instance;
 
-    private LoginDataSource dataSource;
+    private UsersDataSource dataSource;
 
-    // If user credentials will be cached in local storage, it is recommended it be encrypted
-    // @see https://developer.android.com/training/articles/keystore
     @Getter
-    private LoggedInUser user = null;
+    private LoggedInUser user;
 
-    // private constructor : singleton access
-    private LoginRepository(LoginDataSource dataSource) {
-        this.dataSource = dataSource;
+    private UsersRepository() {
+        this.dataSource = new UsersDataSource();
     }
 
-    public static LoginRepository getInstance(LoginDataSource dataSource) {
+    public static UsersRepository getInstance() {
         if (instance == null) {
-            instance = new LoginRepository(dataSource);
+            instance = new UsersRepository();
         }
         return instance;
     }
@@ -38,19 +35,20 @@ public class LoginRepository {
         user = null;
     }
 
-    private void setLoggedInUser(LoggedInUser user) {
+    public void setLoggedInUser(LoggedInUser user) {
         this.user = user;
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
     }
 
     public Result<LoggedInUser> login(String email, String password) {
-        // handle createUser
         Result<LoggedInUser> result = dataSource.login(email, password);
         if (result instanceof Result.Success) {
             setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
         }
 
         return result;
+    }
+
+    public DatalessResult createUser(String displayName, String email, String password) {
+        return dataSource.createUser(displayName, email, password);
     }
 }
