@@ -79,4 +79,43 @@ public class ListingDataSource {
             if (connection != null) connection.disconnect();
         }
     }
+
+    private DatalessResult performActionOnListing(String token, URL url) {
+        HttpURLConnection connection = null;
+
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Authorization", "Bearer " + token);
+            connection.setRequestMethod("GET");
+
+            int status = connection.getResponseCode();
+            if (status == HttpURLConnection.HTTP_OK) {
+                return new DatalessResult.Success();
+            } else {
+                return new DatalessResult.Error(new IOException("Error getting listings: " + connection.getResponseMessage()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new DatalessResult.Error(new IOException("Error getting listings", e));
+        } finally {
+            if (connection != null) connection.disconnect();
+        }
+    }
+
+    public DatalessResult activateListing(String token, long listingId) {
+        return performActionOnListing(token, Endpoints.resolve(Endpoints.ACTIVATE_LISTING, listingId));
+    }
+
+    public DatalessResult deactivateListing(String token, long listingId) {
+        return performActionOnListing(token, Endpoints.resolve(Endpoints.DEACTIVATE_LISTING, listingId));
+    }
+
+    public DatalessResult assignListing(String token, long listingId) {
+        return performActionOnListing(token, Endpoints.resolve(Endpoints.ASSIGN_LISTING, listingId));
+    }
+
+    public DatalessResult unassignListing(String token, long listingId) {
+        return performActionOnListing(token, Endpoints.resolve(Endpoints.UNASSIGN_LISTING, listingId));
+    }
 }

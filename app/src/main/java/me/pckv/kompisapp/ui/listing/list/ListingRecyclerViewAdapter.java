@@ -1,5 +1,6 @@
 package me.pckv.kompisapp.ui.listing.list;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,10 +8,13 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.List;
 
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.ui.listing.view.ListingActivity;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Listing} and makes a call to the
@@ -33,7 +37,7 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Listing listing = mValues.get(position);
+        final Listing listing = mValues.get(position);
 
         holder.mListing = listing;
         holder.mTitleView.setText(listing.getTitle());
@@ -43,7 +47,9 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: view details
+                Intent intent = new Intent(v.getContext(), ListingActivity.class);
+                intent.putExtra("listingJson", JSON.toJSONString(listing));
+                v.getContext().startActivity(intent);
             }
         });
     }

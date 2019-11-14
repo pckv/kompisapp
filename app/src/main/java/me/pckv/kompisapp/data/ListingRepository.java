@@ -24,11 +24,39 @@ public class ListingRepository {
         return instance;
     }
 
+    public boolean isOwner(Listing listing) {
+        return usersRepository.getUser().getId() == listing.getOwner().getId();
+    }
+
+    public boolean isAssignee(Listing listing) {
+        if (listing.getAssignee() == null) {
+            return false;
+        }
+
+        return usersRepository.getUser().getId() == listing.getAssignee().getId();
+    }
+
     public DatalessResult createListing(String title, boolean driver) {
         return listingDatasource.createListing(usersRepository.getToken(), title, driver);
     }
 
     public Result<List<Listing>> getListings() {
         return listingDatasource.getListings(usersRepository.getToken());
+    }
+
+    public DatalessResult activateListing(long listingId) {
+        return listingDatasource.activateListing(usersRepository.getToken(), listingId);
+    }
+
+    public DatalessResult deactivateListing(long listingId) {
+        return listingDatasource.deactivateListing(usersRepository.getToken(), listingId);
+    }
+
+    public DatalessResult assignListing(long listingId) {
+        return listingDatasource.assignListing(usersRepository.getToken(), listingId);
+    }
+
+    public DatalessResult unassignListing(long listingId) {
+        return listingDatasource.unassignListing(usersRepository.getToken(), listingId);
     }
 }

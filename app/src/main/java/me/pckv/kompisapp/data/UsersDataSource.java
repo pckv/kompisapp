@@ -49,7 +49,7 @@ public class UsersDataSource {
 
                 String token = connection.getHeaderField("Authorization").replace("Bearer ", "");
 
-                return new Result.Success<>(new LoggedInUser(token, email, user.getDisplayName()));
+                return new Result.Success<>(new LoggedInUser(token, user.getId(), email, user.getDisplayName()));
             } else {
                 return new Result.Error(new IOException("Error logging in: " + connection.getResponseMessage()));
             }
