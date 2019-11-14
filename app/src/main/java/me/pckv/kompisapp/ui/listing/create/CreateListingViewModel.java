@@ -9,15 +9,16 @@ import androidx.lifecycle.ViewModel;
 
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.DatalessResult;
-import me.pckv.kompisapp.data.ListingDatasource;
+import me.pckv.kompisapp.data.ListingRepository;
 
 public class CreateListingViewModel extends ViewModel {
 
     private MutableLiveData<CreateListingFormState> createListingFormState = new MutableLiveData<>();
     private MutableLiveData<CreateListingResult> createListingResult = new MutableLiveData<>();
-    private ListingDatasource listingDatasource;
+    private ListingRepository listingRepository;
 
-    public CreateListingViewModel() {
+    public CreateListingViewModel(ListingRepository listingRepository) {
+        this.listingRepository = listingRepository;
     }
 
     public LiveData<CreateListingFormState> getCreateListingFormState() {
@@ -33,7 +34,7 @@ public class CreateListingViewModel extends ViewModel {
         new AsyncTask<Void, Void, DatalessResult>() {
             @Override
             protected DatalessResult doInBackground(Void... voids) {
-                return listingDatasource.createListing(title, driver);
+                return listingRepository.createListing(title, driver);
             }
 
             @Override

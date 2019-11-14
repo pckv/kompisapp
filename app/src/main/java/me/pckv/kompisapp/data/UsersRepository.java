@@ -35,6 +35,15 @@ public class UsersRepository {
         user = null;
     }
 
+    public String getToken() {
+        if (isLoggedIn()) {
+            return user.getToken();
+        }
+
+        // Just use empty token for now
+        return "";
+    }
+
     public void setLoggedInUser(LoggedInUser user) {
         this.user = user;
     }
