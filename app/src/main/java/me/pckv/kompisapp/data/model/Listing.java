@@ -15,4 +15,8 @@ public class Listing {
 
     @Nullable
     private User assignee;
+
+    public boolean hasAssignee() {
+        return assignee != null;
+    }
 }
