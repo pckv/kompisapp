@@ -21,4 +21,8 @@
     <string name="create_listing_failed">Failed to create listing</string>
     <string name="invalid_title">Title is required</string>
     <string name="listing_created">Listing created</string>
+
+    <string name="title_activity_listings">View listings</string>
+    <string name="action_settings">Settings</string>
+    <string name="get_listings_failed">Failed to retrieve listings</string>
 </resources>

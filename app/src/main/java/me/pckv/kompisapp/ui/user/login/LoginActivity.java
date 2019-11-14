@@ -1,6 +1,5 @@
 package me.pckv.kompisapp.ui.user.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +20,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import me.pckv.kompisapp.R;
+import me.pckv.kompisapp.ui.listing.list.ListingsActivity;
 import me.pckv.kompisapp.ui.user.create.CreateUserActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -69,8 +69,10 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
 
-                    setResult(Activity.RESULT_OK);
-                    finish();
+                    Intent intent = new Intent(LoginActivity.this, ListingsActivity.class);
+                    startActivity(intent);
+                    //setResult(Activity.RESULT_OK);
+                    //finish();
                 }
             }
         });
