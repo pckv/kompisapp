@@ -34,4 +34,5 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
     implementation 'com.alibaba:fastjson:1.1.71.android'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 }

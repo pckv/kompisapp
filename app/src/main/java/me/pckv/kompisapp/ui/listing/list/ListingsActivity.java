@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,6 +26,7 @@ public class ListingsActivity extends AppCompatActivity {
 
     private ListingsViewModel listingsViewModel;
     private ListingRecyclerViewAdapter adapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +59,20 @@ public class ListingsActivity extends AppCompatActivity {
                 }
                 if (listingsResult.getSuccess() != null) {
                     setUpRecyclerView(listingsResult.getSuccess());
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
 
         listingsViewModel.getListings();
+
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listingsViewModel.getListings();
+            }
+        });
     }
 
     private void setUpRecyclerView(List<Listing> listings) {
