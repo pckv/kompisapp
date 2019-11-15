@@ -48,6 +48,18 @@ public class Repository {
         loggedInUser = null;
     }
 
+    public boolean isOwner(Listing listing) {
+        return loggedInUser.getId() == listing.getOwner().getId();
+    }
+
+    public boolean isAssignee(Listing listing) {
+        if (listing.getAssignee() == null) {
+            return false;
+        }
+
+        return loggedInUser.getId() == listing.getAssignee().getId();
+    }
+
     private <T> Response<T> execute(Call<T> call) throws HttpStatusException {
         Response<T> response;
         try {

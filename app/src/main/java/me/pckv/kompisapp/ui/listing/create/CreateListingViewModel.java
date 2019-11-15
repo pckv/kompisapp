@@ -1,49 +1,43 @@
 package me.pckv.kompisapp.ui.listing.create;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.DatalessResult;
-import me.pckv.kompisapp.data.ListingRepository;
+import me.pckv.kompisapp.data.HttpStatusException;
+import me.pckv.kompisapp.data.Repository;
+import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.ui.TaskResult;
+import me.pckv.kompisapp.ui.UiAsyncTask;
 
 public class CreateListingViewModel extends ViewModel {
 
     private MutableLiveData<CreateListingFormState> createListingFormState = new MutableLiveData<>();
-    private MutableLiveData<CreateListingResult> createListingResult = new MutableLiveData<>();
-    private ListingRepository listingRepository;
+    private MutableLiveData<TaskResult<Listing>> createListingResult = new MutableLiveData<>();
+    private Repository repository;
 
-    public CreateListingViewModel(ListingRepository listingRepository) {
-        this.listingRepository = listingRepository;
+    public CreateListingViewModel() {
+        this.repository = Repository.getInstance();
     }
 
     public LiveData<CreateListingFormState> getCreateListingFormState() {
         return createListingFormState;
     }
 
-    public LiveData<CreateListingResult> getCreateUserResult() {
+    public LiveData<TaskResult<Listing>> getCreateUserResult() {
         return createListingResult;
     }
 
     @SuppressLint("StaticFieldLeak")
     public void createListing(final String title, final boolean driver) {
-        new AsyncTask<Void, Void, DatalessResult>() {
-            @Override
-            protected DatalessResult doInBackground(Void... voids) {
-                return listingRepository.createListing(title, driver);
-            }
+        new UiAsyncTask<Listing>(createListingResult) {
 
             @Override
-            protected void onPostExecute(DatalessResult result) {
-                if (result instanceof DatalessResult.Success) {
-                    createListingResult.setValue(new CreateListingResult());
-                } else {
-                    createListingResult.setValue(new CreateListingResult(R.string.create_listing_failed));
-                }
+            protected Listing doInBackground() throws HttpStatusException {
+                return repository.createListing(title, driver);
             }
         }.execute();
     }

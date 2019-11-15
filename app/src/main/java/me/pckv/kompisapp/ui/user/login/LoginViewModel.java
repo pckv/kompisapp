@@ -1,7 +1,6 @@
 package me.pckv.kompisapp.ui.user.login;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.util.Patterns;
 
 import androidx.lifecycle.LiveData;
@@ -9,44 +8,37 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.Result;
-import me.pckv.kompisapp.data.UsersRepository;
-import me.pckv.kompisapp.data.model.LoggedInUser;
+import me.pckv.kompisapp.data.HttpStatusException;
+import me.pckv.kompisapp.data.Repository;
+import me.pckv.kompisapp.data.model.User;
+import me.pckv.kompisapp.ui.TaskResult;
+import me.pckv.kompisapp.ui.UiAsyncTask;
 
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private UsersRepository usersRepository;
+    private MutableLiveData<TaskResult<User>> loginResult = new MutableLiveData<>();
+    private Repository repository;
 
-    LoginViewModel(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
+    LoginViewModel() {
+        this.repository = Repository.getInstance();
     }
 
     public LiveData<LoginFormState> getLoginFormState() {
         return loginFormState;
     }
 
-    public LiveData<LoginResult> getLoginResult() {
+    public LiveData<TaskResult<User>> getLoginResult() {
         return loginResult;
     }
 
     @SuppressLint("StaticFieldLeak")
     public void login(final String email, final String password) {
-        new AsyncTask<Void, Void, Result>() {
-            @Override
-            protected Result doInBackground(Void... voids) {
-                return usersRepository.login(email, password);
-            }
+        new UiAsyncTask<User>(loginResult) {
 
             @Override
-            protected void onPostExecute(Result result) {
-                if (result instanceof Result.Success) {
-                    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-                    loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-                } else {
-                    loginResult.setValue(new LoginResult(R.string.login_failed));
-                }
+            protected User doInBackground() throws HttpStatusException {
+                return repository.authorize(email, password);
             }
         }.execute();
     }
