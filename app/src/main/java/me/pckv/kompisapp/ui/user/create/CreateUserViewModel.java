@@ -1,7 +1,6 @@
 package me.pckv.kompisapp.ui.user.create;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.util.Patterns;
 
 import androidx.lifecycle.LiveData;
@@ -9,42 +8,37 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.DatalessResult;
-import me.pckv.kompisapp.data.UsersRepository;
+import me.pckv.kompisapp.data.HttpStatusException;
+import me.pckv.kompisapp.data.Repository;
+import me.pckv.kompisapp.data.model.User;
+import me.pckv.kompisapp.ui.TaskResult;
+import me.pckv.kompisapp.ui.UiAsyncTask;
 
 public class CreateUserViewModel extends ViewModel {
 
     private MutableLiveData<CreateUserFormState> createUserFormState = new MutableLiveData<>();
-    private MutableLiveData<CreateUserResult> createUserResult = new MutableLiveData<>();
-    private UsersRepository usersRepository;
+    private MutableLiveData<TaskResult<User>> createUserResult = new MutableLiveData<>();
+    private Repository repository;
 
-    public CreateUserViewModel(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
+    public CreateUserViewModel() {
+        this.repository = Repository.getInstance();
     }
 
     public LiveData<CreateUserFormState> getCreateUserFormState() {
         return createUserFormState;
     }
 
-    public LiveData<CreateUserResult> getCreateUserResult() {
+    public LiveData<TaskResult<User>> getCreateUserResult() {
         return createUserResult;
     }
 
     @SuppressLint("StaticFieldLeak")
     public void createUser(final String displayName, final String email, final String password) {
-        new AsyncTask<Void, Void, DatalessResult>() {
-            @Override
-            protected DatalessResult doInBackground(Void... voids) {
-                return usersRepository.createUser(displayName, email, password);
-            }
+        new UiAsyncTask<User>(createUserResult) {
 
             @Override
-            protected void onPostExecute(DatalessResult result) {
-                if (result instanceof DatalessResult.Success) {
-                    createUserResult.setValue(new CreateUserResult());
-                } else {
-                    createUserResult.setValue(new CreateUserResult(R.string.create_user_failed));
-                }
+            protected User doInBackground() throws HttpStatusException {
+                return repository.createUser(displayName, email, password);
             }
         }.execute();
     }

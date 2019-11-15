@@ -1,48 +1,38 @@
 package me.pckv.kompisapp.ui.listing.list;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.ListingRepository;
-import me.pckv.kompisapp.data.Result;
+import me.pckv.kompisapp.data.HttpStatusException;
+import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.ui.TaskResult;
+import me.pckv.kompisapp.ui.UiAsyncTask;
 
 public class ListingsViewModel extends ViewModel {
 
-    private MutableLiveData<ListingsResult> listingsResult = new MutableLiveData<>();
-    private ListingRepository listingRepository;
+    private MutableLiveData<TaskResult<List<Listing>>> listingsResult = new MutableLiveData<>();
+    private Repository repository;
 
-    public ListingsViewModel(ListingRepository listingRepository) {
-        this.listingRepository = listingRepository;
+    public ListingsViewModel() {
+        this.repository = Repository.getInstance();
     }
 
-    public LiveData<ListingsResult> getLisitingsResult() {
+    public MutableLiveData<TaskResult<List<Listing>>> getListingsResult() {
         return listingsResult;
     }
 
     @SuppressLint("StaticFieldLeak")
     public void getListings() {
-        new AsyncTask<Void, Void, Result<List<Listing>>>() {
-            @Override
-            protected Result<List<Listing>> doInBackground(Void... voids) {
-                return listingRepository.getListings();
-            }
+        new UiAsyncTask<List<Listing>>(listingsResult) {
 
             @Override
-            protected void onPostExecute(Result<List<Listing>> result) {
-                if (result instanceof Result.Success) {
-                    List<Listing> listings = ((Result.Success<List<Listing>>) result).getData();
-                    listingsResult.setValue(new ListingsResult(listings));
-                } else {
-                    listingsResult.setValue(new ListingsResult(R.string.get_listings_failed));
-                }
+            protected List<Listing> doInBackground() throws HttpStatusException {
+                return repository.getListings();
             }
         }.execute();
     }

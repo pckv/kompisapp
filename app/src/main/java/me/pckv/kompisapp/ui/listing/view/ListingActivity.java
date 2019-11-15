@@ -69,9 +69,9 @@ public class ListingActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    listingViewModel.actiavteListing();
+                    listingViewModel.activateListing();
                 } else {
-                    listingViewModel.deactiavteListing();
+                    listingViewModel.deactivateListing();
                 }
             }
         });

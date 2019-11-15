@@ -11,12 +11,13 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import me.pckv.kompisapp.R;
+import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.ui.TaskResult;
 
 public class CreateListingActivity extends AppCompatActivity {
 
@@ -26,8 +27,7 @@ public class CreateListingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_listing);
-        createListingViewModel = ViewModelProviders.of(this, new CreateListingViewModelFactory())
-                .get(CreateListingViewModel.class);
+        createListingViewModel = ViewModelProviders.of(this).get(CreateListingViewModel.class);
 
         final EditText titleEditText = findViewById(R.id.title);
         final Switch driverSwitch = findViewById(R.id.driver);
@@ -47,16 +47,18 @@ public class CreateListingActivity extends AppCompatActivity {
             }
         });
 
-        createListingViewModel.getCreateUserResult().observe(this, new Observer<CreateListingResult>() {
+        createListingViewModel.getCreateUserResult().observe(this, new Observer<TaskResult<Listing>>() {
             @Override
-            public void onChanged(CreateListingResult createListingResult) {
+            public void onChanged(TaskResult<Listing> createListingResult) {
                 if (createListingResult == null) {
                     return;
                 }
                 loadingProgressBar.setVisibility(View.GONE);
-                if (createListingResult.getError() != null) {
-                    showCreateListingFailed(createListingResult.getError());
+
+                if (createListingResult.isError()) {
+                    showCreateListingFailed();
                 }
+
                 if (createListingResult.isSuccess()) {
                     showCreateListingSuccess();
                     setResult(Activity.RESULT_OK);
@@ -104,7 +106,7 @@ public class CreateListingActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), R.string.listing_created, Toast.LENGTH_SHORT).show();
     }
 
-    private void showCreateListingFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    private void showCreateListingFailed() {
+        Toast.makeText(getApplicationContext(), R.string.create_listing_failed, Toast.LENGTH_SHORT).show();
     }
 }
