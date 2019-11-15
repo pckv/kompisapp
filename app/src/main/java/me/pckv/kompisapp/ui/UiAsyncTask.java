@@ -6,18 +6,18 @@ import androidx.lifecycle.MutableLiveData;
 
 import me.pckv.kompisapp.data.HttpStatusException;
 
-public abstract class UiAsyncTask<Result> extends AsyncTask<Void, Void, Result> {
+public abstract class UiAsyncTask<T> extends AsyncTask<Void, Void, T> {
 
     private HttpStatusException exception;
-    private MutableLiveData<TaskResult<Result>> liveData;
+    private MutableLiveData<TaskResult<T>> liveData;
 
-    public UiAsyncTask(MutableLiveData<TaskResult<Result>> liveData) {
+    public UiAsyncTask(MutableLiveData<TaskResult<T>> liveData) {
         this.exception = null;
         this.liveData = liveData;
     }
 
     @Override
-    protected Result doInBackground(Void... voids) {
+    protected T doInBackground(Void... voids) {
         try {
             return doInBackground();
         } catch (HttpStatusException e) {
@@ -26,16 +26,16 @@ public abstract class UiAsyncTask<Result> extends AsyncTask<Void, Void, Result> 
         }
     }
 
-    abstract protected Result doInBackground() throws HttpStatusException;
+    abstract protected T doInBackground() throws HttpStatusException;
 
     @Override
-    protected void onPostExecute(Result result) {
+    protected void onPostExecute(T result) {
         super.onPostExecute(result);
 
         if (exception == null) {
             liveData.setValue(new TaskResult<>(result));
         } else {
-            liveData.setValue(new TaskResult<Result>(exception));
+            liveData.setValue(new TaskResult<T>(exception));
         }
     }
 }
