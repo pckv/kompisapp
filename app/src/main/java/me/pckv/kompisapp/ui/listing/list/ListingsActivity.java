@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -20,6 +19,7 @@ import java.util.List;
 
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.ui.TaskResult;
 import me.pckv.kompisapp.ui.listing.create.CreateListingActivity;
 
 public class ListingsActivity extends AppCompatActivity {
@@ -32,8 +32,7 @@ public class ListingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listings);
-        listingsViewModel = ViewModelProviders.of(this, new ListingsViewModelFactory())
-                .get(ListingsViewModel.class);
+        listingsViewModel = ViewModelProviders.of(this).get(ListingsViewModel.class);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,17 +46,17 @@ public class ListingsActivity extends AppCompatActivity {
             }
         });
 
-        listingsViewModel.getLisitingsResult().observe(this, new Observer<ListingsResult>() {
+        listingsViewModel.getListingsResult().observe(this, new Observer<TaskResult<List<Listing>>>() {
             @Override
-            public void onChanged(ListingsResult listingsResult) {
+            public void onChanged(TaskResult<List<Listing>> listingsResult) {
                 if (listingsResult == null) {
                     return;
                 }
 
-                if (listingsResult.getError() != null) {
-                    showGetListingsFailed(listingsResult.getError());
+                if (listingsResult.isError()) {
+                    showGetListingsFailed();
                 }
-                if (listingsResult.getSuccess() != null) {
+                if (listingsResult.isSuccess()) {
                     setUpRecyclerView(listingsResult.getSuccess());
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
@@ -83,7 +82,7 @@ public class ListingsActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void showGetListingsFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    private void showGetListingsFailed() {
+        Toast.makeText(getApplicationContext(), R.string.create_listing_failed, Toast.LENGTH_SHORT).show();
     }
 }

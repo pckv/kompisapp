@@ -14,12 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import me.pckv.kompisapp.R;
+import me.pckv.kompisapp.data.model.User;
+import me.pckv.kompisapp.ui.TaskResult;
 
 public class CreateUserActivity extends AppCompatActivity {
 
@@ -29,8 +30,7 @@ public class CreateUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_user);
-        createUserViewModel = ViewModelProviders.of(this, new CreateUserViewModelFactory())
-                .get(CreateUserViewModel.class);
+        createUserViewModel = ViewModelProviders.of(this).get(CreateUserViewModel.class);
 
         final EditText displayNameEditText = findViewById(R.id.display_name);
         final EditText emailEditText = findViewById(R.id.email);
@@ -57,16 +57,18 @@ public class CreateUserActivity extends AppCompatActivity {
             }
         });
 
-        createUserViewModel.getCreateUserResult().observe(this, new Observer<CreateUserResult>() {
+        createUserViewModel.getCreateUserResult().observe(this, new Observer<TaskResult<User>>() {
             @Override
-            public void onChanged(@Nullable CreateUserResult createUserResult) {
+            public void onChanged(@Nullable TaskResult<User> createUserResult) {
                 if (createUserResult == null) {
                     return;
                 }
                 loadingProgressBar.setVisibility(View.GONE);
-                if (createUserResult.getError() != null) {
-                    showCreateUserFailed(createUserResult.getError());
+
+                if (createUserResult.isError()) {
+                    showCreateUserFailed();
                 }
+
                 if (createUserResult.isSuccess()) {
                     showCreateUserSuccess();
                     setResult(Activity.RESULT_OK);
@@ -128,7 +130,7 @@ public class CreateUserActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), R.string.created_user, Toast.LENGTH_SHORT).show();
     }
 
-    private void showCreateUserFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    private void showCreateUserFailed() {
+        Toast.makeText(getApplicationContext(), R.string.create_user_failed, Toast.LENGTH_SHORT).show();
     }
 }

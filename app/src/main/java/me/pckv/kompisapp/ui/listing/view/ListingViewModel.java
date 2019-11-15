@@ -1,68 +1,90 @@
 package me.pckv.kompisapp.ui.listing.view;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import me.pckv.kompisapp.data.DatalessResult;
-import me.pckv.kompisapp.data.ListingRepository;
+import me.pckv.kompisapp.data.HttpStatusException;
+import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.ui.TaskResult;
+import me.pckv.kompisapp.ui.UiAsyncTask;
 
 public class ListingViewModel extends ViewModel {
 
-    private ListingRepository listingRepository;
+    private Repository repository;
     private long listingId;
 
-    public ListingViewModel(ListingRepository listingRepository, long listingId) {
-        this.listingRepository = listingRepository;
+    private MutableLiveData<TaskResult<Boolean>> activateResult = new MutableLiveData<>();
+    private MutableLiveData<TaskResult<Boolean>> assignResult = new MutableLiveData<>();
+
+    public ListingViewModel(long listingId) {
+        this.repository = Repository.getInstance();
         this.listingId = listingId;
     }
 
+    public LiveData<TaskResult<Boolean>> getActivateResult() {
+        return activateResult;
+    }
+
+    public LiveData<TaskResult<Boolean>> getAssignResult() {
+        return assignResult;
+    }
+
     public boolean isOwner(Listing listing) {
-        return listingRepository.isOwner(listing);
+        return repository.isOwner(listing);
     }
 
     public boolean isAssignee(Listing listing) {
-        return listingRepository.isAssignee(listing);
+        return repository.isAssignee(listing);
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void actiavteListing() {
-        new AsyncTask<Void, Void, DatalessResult>() {
+    public void activateListing() {
+        new UiAsyncTask<Boolean>(activateResult) {
+
             @Override
-            protected DatalessResult doInBackground(Void... voids) {
-                return listingRepository.activateListing(listingId);
+            protected Boolean doInBackground() throws HttpStatusException {
+                repository.activateListing(listingId);
+                return true;
             }
         }.execute();
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void deactiavteListing() {
-        new AsyncTask<Void, Void, DatalessResult>() {
+    public void deactivateListing() {
+        new UiAsyncTask<Boolean>(activateResult) {
+
             @Override
-            protected DatalessResult doInBackground(Void... voids) {
-                return listingRepository.deactivateListing(listingId);
+            protected Boolean doInBackground() throws HttpStatusException {
+                repository.deactivateListing(listingId);
+                return false;
             }
         }.execute();
     }
 
     @SuppressLint("StaticFieldLeak")
     public void assignListing() {
-        new AsyncTask<Void, Void, DatalessResult>() {
+        new UiAsyncTask<Boolean>(assignResult) {
+
             @Override
-            protected DatalessResult doInBackground(Void... voids) {
-                return listingRepository.assignListing(listingId);
+            protected Boolean doInBackground() throws HttpStatusException {
+                repository.assignListing(listingId);
+                return true;
             }
         }.execute();
     }
 
     @SuppressLint("StaticFieldLeak")
     public void unassignListing() {
-        new AsyncTask<Void, Void, DatalessResult>() {
+        new UiAsyncTask<Boolean>(activateResult) {
+
             @Override
-            protected DatalessResult doInBackground(Void... voids) {
-                return listingRepository.unassignListing(listingId);
+            protected Boolean doInBackground() throws HttpStatusException {
+                repository.unassignListing(listingId);
+                return false;
             }
         }.execute();
     }

@@ -1,5 +1,6 @@
 package me.pckv.kompisapp.ui.user.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,12 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import me.pckv.kompisapp.R;
+import me.pckv.kompisapp.data.model.User;
+import me.pckv.kompisapp.ui.TaskResult;
 import me.pckv.kompisapp.ui.listing.list.ListingsActivity;
 import me.pckv.kompisapp.ui.user.create.CreateUserActivity;
 
@@ -31,8 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
         final EditText usernameEditText = findViewById(R.id.email);
         final EditText passwordEditText = findViewById(R.id.password);
@@ -56,23 +57,26 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        loginViewModel.getLoginResult().observe(this, new Observer<TaskResult<User>>() {
             @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
+            public void onChanged(@Nullable TaskResult<User> loginResult) {
                 if (loginResult == null) {
                     return;
                 }
                 loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
+
+                if (loginResult.isError()) {
+                    showLoginFailed();
                 }
-                if (loginResult.getSuccess() != null) {
+
+                if (loginResult.isSuccess()) {
                     updateUiWithUser(loginResult.getSuccess());
 
                     Intent intent = new Intent(LoginActivity.this, ListingsActivity.class);
                     startActivity(intent);
-                    //setResult(Activity.RESULT_OK);
-                    //finish();
+
+                    setResult(Activity.RESULT_OK);
+                    finish();
                 }
             }
         });
@@ -126,13 +130,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+    private void updateUiWithUser(User user) {
+        String welcome = getString(R.string.welcome) + user.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    private void showLoginFailed() {
+        Toast.makeText(getApplicationContext(), R.string.login_failed, Toast.LENGTH_SHORT).show();
     }
 }
