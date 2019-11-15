@@ -20,7 +20,7 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<TaskResult<User>> loginResult = new MutableLiveData<>();
     private Repository repository;
 
-    LoginViewModel() {
+    public LoginViewModel() {
         this.repository = Repository.getInstance();
     }
 
