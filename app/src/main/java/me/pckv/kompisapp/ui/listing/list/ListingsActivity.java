@@ -92,10 +92,12 @@ public class ListingsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ListingRecyclerViewAdapter(this, listings);
         recyclerView.setAdapter(adapter);
+        adapter.getFilter().filter("");
     }
 
     private void updateRecyclerView(List<Listing> listings) {
         adapter.updateListings(listings);
+        adapter.getFilter().filter("");
     }
 
     private void showGetListingsFailed() {
