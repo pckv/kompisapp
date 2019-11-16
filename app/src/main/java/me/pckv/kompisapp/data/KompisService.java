@@ -32,14 +32,14 @@ public interface KompisService {
     Call<Listing> createListing(@Header("Authorization") String auth, @Body CreateListing listing);
 
     @GET("/listings/{id}/activate")
-    Call activateListing(@Header("Authorization") String auth, @Path("id") long listingId);
+    Call<Void> activateListing(@Header("Authorization") String auth, @Path("id") long listingId);
 
     @GET("/listings/{id}/deactivate")
-    Call deactivateListing(@Header("Authorization") String auth, @Path("id") long listingId);
+    Call<Void> deactivateListing(@Header("Authorization") String auth, @Path("id") long listingId);
 
     @GET("/listings/{id}/assign")
-    Call assignListing(@Header("Authorization") String auth, @Path("id") long listingId);
+    Call<Void> assignListing(@Header("Authorization") String auth, @Path("id") long listingId);
 
     @GET("/listings/{id}/unassign")
-    Call unassignListing(@Header("Authorization") String auth, @Path("id") long listingId);
+    Call<Void> unassignListing(@Header("Authorization") String auth, @Path("id") long listingId);
 }
