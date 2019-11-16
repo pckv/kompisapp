@@ -42,12 +42,15 @@ public class ListingActivity extends AppCompatActivity {
         binding.setListing(listing);
 
         if (!listingViewModel.isOwner(listing) && (listing.hasAssignee() && !listingViewModel.isAssignee(listing))) {
-            binding.assign.setVisibility(View.INVISIBLE);
+            binding.assign.setVisibility(View.GONE);
         }
 
-
         if (!listingViewModel.isOwner(listing)) {
-            binding.activate.setVisibility(View.INVISIBLE);
+            binding.activate.setVisibility(View.GONE);
+        }
+
+        if (!listing.hasAssignee()) {
+            binding.assignee.setVisibility(View.GONE);
         }
 
         binding.activate.setOnClickListener(new View.OnClickListener() {
