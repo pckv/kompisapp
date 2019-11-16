@@ -1,5 +1,6 @@
 package me.pckv.kompisapp.ui.listing.list;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +25,17 @@ import me.pckv.kompisapp.ui.listing.view.ListingActivity;
 public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecyclerViewAdapter.ViewHolder> {
 
     private final List<Listing> mValues;
+    private Context mContext;
 
-    public ListingRecyclerViewAdapter(List<Listing> items) {
+    public ListingRecyclerViewAdapter(Context context, List<Listing> items) {
+        mContext = context;
         mValues = items;
+    }
+
+    public void updateListings(List<Listing> listings) {
+        mValues.clear();
+        mValues.addAll(listings);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -47,9 +56,9 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ListingActivity.class);
+                Intent intent = new Intent(mContext, ListingActivity.class);
                 intent.putExtra("listingJson", JSON.toJSONString(listing));
-                v.getContext().startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
     }
