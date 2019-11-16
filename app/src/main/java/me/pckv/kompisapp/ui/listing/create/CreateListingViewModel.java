@@ -1,13 +1,10 @@
 package me.pckv.kompisapp.ui.listing.create;
 
-import android.annotation.SuppressLint;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.HttpStatusException;
 import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.Listing;
 import me.pckv.kompisapp.ui.TaskResult;
@@ -31,15 +28,8 @@ public class CreateListingViewModel extends ViewModel {
         return createListingResult;
     }
 
-    @SuppressLint("StaticFieldLeak")
     public void createListing(final String title, final boolean driver) {
-        new UiAsyncTask<Listing>(createListingResult) {
-
-            @Override
-            protected Listing doInBackground() throws HttpStatusException {
-                return repository.createListing(title, driver);
-            }
-        }.execute();
+        UiAsyncTask.executeAndUpdate(createListingResult, () -> repository.createListing(title, driver));
     }
 
     public void createListingDataChanged(String title) {
