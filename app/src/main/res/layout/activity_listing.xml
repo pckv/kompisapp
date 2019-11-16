@@ -1,53 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceListItem"
-        tools:text="Title" />
+    <data>
 
-    <LinearLayout
+        <variable
+            name="listing"
+            type="me.pckv.kompisapp.data.model.Listing" />
+    </data>
+
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/owner_name"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:text="Owner" />
+            android:text="@{listing.title}"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:text="Title" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/owner_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{listing.owner.displayName}"
+                tools:text="Owner" />
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                tools:text="5km" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/distance"
-            android:layout_width="wrap_content"
+            android:id="@+id/assignee"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="textEnd"
-            tools:text="5km" />
+            android:text="@{listing.assignee.displayName}"
+            tools:text="Assignee" />
+
+        <Switch
+            android:id="@+id/assign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@{listing.hasAssignee()}"
+            android:text="@string/listing_assign" />
+
+        <Switch
+            android:id="@+id/activate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@{listing.active}"
+            android:text="@string/listing_activate" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/assignee"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="Assignee" />
-
-    <Switch
-        android:id="@+id/assign"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/listing_assign" />
-
-    <Switch
-        android:id="@+id/activate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/listing_activate" />
-</LinearLayout>
+</layout>

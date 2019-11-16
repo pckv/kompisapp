@@ -3,16 +3,16 @@ package me.pckv.kompisapp.ui.listing.view;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.alibaba.fastjson.JSON;
 
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.databinding.ActivityListingBinding;
 
 public class ListingActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class ListingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listing);
+        ActivityListingBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_listing);
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
@@ -35,37 +35,18 @@ public class ListingActivity extends AppCompatActivity {
         listingViewModel = ViewModelProviders.of(this, new ListingViewModelFactory(listing.getId()))
                 .get(ListingViewModel.class);
 
-        final TextView titleTextView = findViewById(R.id.title);
-        final TextView ownerNameTextView = findViewById(R.id.owner_name);
-        final TextView distanceTextView = findViewById(R.id.distance);
-        final TextView assigneeTextView = findViewById(R.id.assignee);
-        final Switch assignSwitch = findViewById(R.id.assign);
-        final Switch activateSwitch = findViewById(R.id.activate);
-
-        titleTextView.setText(listing.getTitle());
-        ownerNameTextView.setText(listing.getOwner().getDisplayName());
-        distanceTextView.setText("5 km");
-
-        if (listing.hasAssignee()) {
-            assigneeTextView.setText(listing.getAssignee().getDisplayName());
-        } else {
-            assigneeTextView.setVisibility(View.INVISIBLE);
-        }
+        binding.setListing(listing);
 
         if (!listingViewModel.isOwner(listing) && (listing.hasAssignee() && !listingViewModel.isAssignee(listing))) {
-            assignSwitch.setVisibility(View.INVISIBLE);
-        } else {
-            assignSwitch.setChecked(listing.hasAssignee());
+            binding.assign.setVisibility(View.INVISIBLE);
         }
 
 
         if (!listingViewModel.isOwner(listing)) {
-            activateSwitch.setVisibility(View.INVISIBLE);
-        } else {
-            activateSwitch.setChecked(listing.isActive());
+            binding.activate.setVisibility(View.INVISIBLE);
         }
 
-        activateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.activate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -76,7 +57,7 @@ public class ListingActivity extends AppCompatActivity {
             }
         });
 
-        assignSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.assign.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
