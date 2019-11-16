@@ -79,7 +79,7 @@ public class ListingViewModel extends ViewModel {
 
     @SuppressLint("StaticFieldLeak")
     public void unassignListing() {
-        new UiAsyncTask<Boolean>(activateResult) {
+        new UiAsyncTask<Boolean>(assignResult) {
 
             @Override
             protected Boolean doInBackground() throws HttpStatusException {

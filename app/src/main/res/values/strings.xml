@@ -32,6 +32,11 @@
     <string name="search_hint">Search by title</string>
 
     <string name="assignee">Assignee</string>
-    <string name="listing_assign">Assign yourself to this listing </string>
-    <string name="listing_activate">Activate listing </string>
+    <string name="listing_assign">Assign yourself to this listing</string>
+    <string name="listing_activate">Activate listing</string>
+    <string name="listing_activated">Activated listing</string>
+    <string name="listing_deactivated">Deactivated listing</string>
+    <string name="listing_assigned">You are now assigned to this listing</string>
+    <string name="listing_unassigned">You are no longer assigned to this listing</string>
+
 </resources>
