@@ -2,17 +2,21 @@ package me.pckv.kompisapp.ui.listing.view;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.Toast;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.alibaba.fastjson.JSON;
 
 import me.pckv.kompisapp.R;
+import me.pckv.kompisapp.data.HttpStatusException;
 import me.pckv.kompisapp.data.model.Listing;
 import me.pckv.kompisapp.databinding.ActivityListingBinding;
+import me.pckv.kompisapp.ui.TaskResult;
 
 public class ListingActivity extends AppCompatActivity {
 
@@ -49,10 +53,10 @@ public class ListingActivity extends AppCompatActivity {
             binding.assignee.setVisibility(View.GONE);
         }
 
-        binding.activate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.activate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View v) {
+                if (binding.activate.isChecked()) {
                     listingViewModel.activateListing();
                 } else {
                     listingViewModel.deactivateListing();
@@ -60,15 +64,57 @@ public class ListingActivity extends AppCompatActivity {
             }
         });
 
-        binding.assign.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.assign.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View v) {
+                if (binding.assign.isChecked()) {
                     listingViewModel.assignListing();
                 } else {
                     listingViewModel.unassignListing();
                 }
             }
         });
+
+        listingViewModel.getActivateResult().observe(this, new Observer<TaskResult<Boolean>>() {
+            @Override
+            public void onChanged(TaskResult<Boolean> activateResult) {
+                if (activateResult == null) {
+                    return;
+                }
+
+                if (activateResult.isError()) {
+                    showChangeSwitchError(activateResult.getError());
+                }
+                if (activateResult.isSuccess()) {
+                    showChangeSwitchSuccess(activateResult.getSuccess() ?
+                            R.string.listing_activated : R.string.listing_deactivated);
+                }
+            }
+        });
+
+        listingViewModel.getAssignResult().observe(this, new Observer<TaskResult<Boolean>>() {
+            @Override
+            public void onChanged(TaskResult<Boolean> assignResult) {
+                if (assignResult == null) {
+                    return;
+                }
+
+                if (assignResult.isError()) {
+                    showChangeSwitchError(assignResult.getError());
+                }
+                if (assignResult.isSuccess()) {
+                    showChangeSwitchSuccess(assignResult.getSuccess() ?
+                            R.string.listing_assigned : R.string.listing_unassigned);
+                }
+            }
+        });
+    }
+
+    private void showChangeSwitchSuccess(@StringRes Integer successString) {
+        Toast.makeText(getApplicationContext(), successString, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showChangeSwitchError(HttpStatusException exception) {
+        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
     }
 }
