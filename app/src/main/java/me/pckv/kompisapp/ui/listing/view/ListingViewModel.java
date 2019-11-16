@@ -1,12 +1,9 @@
 package me.pckv.kompisapp.ui.listing.view;
 
-import android.annotation.SuppressLint;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import me.pckv.kompisapp.data.HttpStatusException;
 import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.Listing;
 import me.pckv.kompisapp.ui.TaskResult;
@@ -41,51 +38,31 @@ public class ListingViewModel extends ViewModel {
         return repository.isAssignee(listing);
     }
 
-    @SuppressLint("StaticFieldLeak")
     public void activateListing() {
-        new UiAsyncTask<Boolean>(activateResult) {
-
-            @Override
-            protected Boolean doInBackground() throws HttpStatusException {
-                repository.activateListing(listingId);
-                return true;
-            }
-        }.execute();
+        UiAsyncTask.executeAndUpdate(activateResult, () -> {
+            repository.activateListing(listingId);
+            return true;
+        });
     }
 
-    @SuppressLint("StaticFieldLeak")
     public void deactivateListing() {
-        new UiAsyncTask<Boolean>(activateResult) {
-
-            @Override
-            protected Boolean doInBackground() throws HttpStatusException {
-                repository.deactivateListing(listingId);
-                return false;
-            }
-        }.execute();
+        UiAsyncTask.executeAndUpdate(activateResult, () -> {
+            repository.deactivateListing(listingId);
+            return false;
+        });
     }
 
-    @SuppressLint("StaticFieldLeak")
     public void assignListing() {
-        new UiAsyncTask<Boolean>(assignResult) {
-
-            @Override
-            protected Boolean doInBackground() throws HttpStatusException {
-                repository.assignListing(listingId);
-                return true;
-            }
-        }.execute();
+        UiAsyncTask.executeAndUpdate(assignResult, () -> {
+            repository.assignListing(listingId);
+            return true;
+        });
     }
 
-    @SuppressLint("StaticFieldLeak")
     public void unassignListing() {
-        new UiAsyncTask<Boolean>(assignResult) {
-
-            @Override
-            protected Boolean doInBackground() throws HttpStatusException {
-                repository.unassignListing(listingId);
-                return false;
-            }
-        }.execute();
+        UiAsyncTask.executeAndUpdate(assignResult, () -> {
+            repository.unassignListing(listingId);
+            return false;
+        });
     }
 }

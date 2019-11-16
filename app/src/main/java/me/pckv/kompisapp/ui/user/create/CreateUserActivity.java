@@ -4,23 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.model.User;
-import me.pckv.kompisapp.ui.TaskResult;
 
 public class CreateUserActivity extends AppCompatActivity {
 
@@ -38,42 +32,30 @@ public class CreateUserActivity extends AppCompatActivity {
         final Button createUserButton = findViewById(R.id.create_user);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
-        createUserViewModel.getCreateUserFormState().observe(this, new Observer<CreateUserFormState>() {
-            @Override
-            public void onChanged(@Nullable CreateUserFormState createUserFormState) {
-                if (createUserFormState == null) {
-                    return;
-                }
-                createUserButton.setEnabled(createUserFormState.isDataValid());
-                if (createUserFormState.getDisplayNameError() != null) {
-                    displayNameEditText.setError(getString(createUserFormState.getDisplayNameError()));
-                }
-                if (createUserFormState.getEmailError() != null) {
-                    emailEditText.setError(getString(createUserFormState.getEmailError()));
-                }
-                if (createUserFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(createUserFormState.getPasswordError()));
-                }
+        createUserViewModel.getCreateUserFormState().observe(this, createUserFormState -> {
+            createUserButton.setEnabled(createUserFormState.isDataValid());
+            if (createUserFormState.getDisplayNameError() != null) {
+                displayNameEditText.setError(getString(createUserFormState.getDisplayNameError()));
+            }
+            if (createUserFormState.getEmailError() != null) {
+                emailEditText.setError(getString(createUserFormState.getEmailError()));
+            }
+            if (createUserFormState.getPasswordError() != null) {
+                passwordEditText.setError(getString(createUserFormState.getPasswordError()));
             }
         });
 
-        createUserViewModel.getCreateUserResult().observe(this, new Observer<TaskResult<User>>() {
-            @Override
-            public void onChanged(@Nullable TaskResult<User> createUserResult) {
-                if (createUserResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
+        createUserViewModel.getCreateUserResult().observe(this, createUserResult -> {
+            loadingProgressBar.setVisibility(View.GONE);
 
-                if (createUserResult.isError()) {
-                    showCreateUserFailed();
-                }
+            if (createUserResult.isError()) {
+                showCreateUserFailed();
+            }
 
-                if (createUserResult.isSuccess()) {
-                    showCreateUserSuccess();
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                }
+            if (createUserResult.isSuccess()) {
+                showCreateUserSuccess();
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         });
 
@@ -100,29 +82,22 @@ public class CreateUserActivity extends AppCompatActivity {
 
         emailEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    createUserViewModel.createUser(
-                            displayNameEditText.getText().toString(),
-                            emailEditText.getText().toString(),
-                            passwordEditText.getText().toString());
-                }
-                return false;
-            }
-        });
-
-        createUserButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
+        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 createUserViewModel.createUser(
                         displayNameEditText.getText().toString(),
                         emailEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
+            return false;
+        });
+
+        createUserButton.setOnClickListener(v -> {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            createUserViewModel.createUser(
+                    displayNameEditText.getText().toString(),
+                    emailEditText.getText().toString(),
+                    passwordEditText.getText().toString());
         });
     }
 

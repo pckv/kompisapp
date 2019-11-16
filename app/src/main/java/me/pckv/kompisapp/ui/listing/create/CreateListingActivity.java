@@ -12,12 +12,9 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.model.Listing;
-import me.pckv.kompisapp.ui.TaskResult;
 
 public class CreateListingActivity extends AppCompatActivity {
 
@@ -34,36 +31,24 @@ public class CreateListingActivity extends AppCompatActivity {
         final Button createListingButton = findViewById(R.id.create_listing);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
-        createListingViewModel.getCreateListingFormState().observe(this, new Observer<CreateListingFormState>() {
-            @Override
-            public void onChanged(CreateListingFormState createListingFormState) {
-                if (createListingFormState == null) {
-                    return;
-                }
-                createListingButton.setEnabled(createListingFormState.isDataValid());
-                if (createListingFormState.getTitleError() != null) {
-                    titleEditText.setError(getString(createListingFormState.getTitleError()));
-                }
+        createListingViewModel.getCreateListingFormState().observe(this, createListingFormState -> {
+            createListingButton.setEnabled(createListingFormState.isDataValid());
+            if (createListingFormState.getTitleError() != null) {
+                titleEditText.setError(getString(createListingFormState.getTitleError()));
             }
         });
 
-        createListingViewModel.getCreateUserResult().observe(this, new Observer<TaskResult<Listing>>() {
-            @Override
-            public void onChanged(TaskResult<Listing> createListingResult) {
-                if (createListingResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
+        createListingViewModel.getCreateUserResult().observe(this, createListingResult -> {
+            loadingProgressBar.setVisibility(View.GONE);
 
-                if (createListingResult.isError()) {
-                    showCreateListingFailed();
-                }
+            if (createListingResult.isError()) {
+                showCreateListingFailed();
+            }
 
-                if (createListingResult.isSuccess()) {
-                    showCreateListingSuccess();
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                }
+            if (createListingResult.isSuccess()) {
+                showCreateListingSuccess();
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         });
 
@@ -88,15 +73,12 @@ public class CreateListingActivity extends AppCompatActivity {
 
         titleEditText.addTextChangedListener(afterTextChangedListener);
 
-        createListingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                createListingViewModel.createListing(
-                        titleEditText.getText().toString(),
-                        driverSwitch.isChecked()
-                );
-            }
+        createListingButton.setOnClickListener(v -> {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            createListingViewModel.createListing(
+                    titleEditText.getText().toString(),
+                    driverSwitch.isChecked()
+            );
         });
 
 

@@ -1,6 +1,5 @@
 package me.pckv.kompisapp.ui.user.create;
 
-import android.annotation.SuppressLint;
 import android.util.Patterns;
 
 import androidx.lifecycle.LiveData;
@@ -8,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.HttpStatusException;
 import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.User;
 import me.pckv.kompisapp.ui.TaskResult;
@@ -32,15 +30,8 @@ public class CreateUserViewModel extends ViewModel {
         return createUserResult;
     }
 
-    @SuppressLint("StaticFieldLeak")
     public void createUser(final String displayName, final String email, final String password) {
-        new UiAsyncTask<User>(createUserResult) {
-
-            @Override
-            protected User doInBackground() throws HttpStatusException {
-                return repository.createUser(displayName, email, password);
-            }
-        }.execute();
+        UiAsyncTask.executeAndUpdate(createUserResult, () -> repository.createUser(displayName, email, password));
     }
 
     public void createUserDataChanged(String displayName, String email, String password) {
