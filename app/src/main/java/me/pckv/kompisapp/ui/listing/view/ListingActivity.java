@@ -17,12 +17,11 @@ import me.pckv.kompisapp.databinding.ActivityListingBinding;
 public class ListingActivity extends AppCompatActivity {
 
     private ListingViewModel listingViewModel;
-    private ActivityListingBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_listing);
+        ActivityListingBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_listing);
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
