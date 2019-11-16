@@ -81,7 +81,7 @@ public class Repository {
         return execute(service.createUser(new CreateUser(displayName, email, password))).body();
     }
 
-    public User authorize(String email, String password) throws HttpStatusException {
+    public LoggedInUser authorize(String email, String password) throws HttpStatusException {
         Response<User> response = execute(service.authorize(new LoginUser(email, password)));
 
         String authorization = response.headers().get("Authorization");
@@ -93,7 +93,18 @@ public class Repository {
         User user = response.body();
 
         loggedInUser = new LoggedInUser(token, user.getId(), email, user.getDisplayName());
-        return user;
+        return loggedInUser;
+    }
+
+    public LoggedInUser authenticate(LoggedInUser loggedInUser) throws HttpStatusException {
+        Response<User> response = execute(service.getCurrentUser("Bearer " + loggedInUser.getToken()));
+
+        // Response was successful, which means we're authenticated
+        User user = response.body();
+
+        // Update the logged in user with potentially new data from API
+        this.loggedInUser = new LoggedInUser(loggedInUser.getToken(), user.getId(), loggedInUser.getEmail(), user.getDisplayName());
+        return this.loggedInUser;
     }
 
     public List<Listing> getListings() throws HttpStatusException {

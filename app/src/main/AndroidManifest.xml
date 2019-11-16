@@ -14,20 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.listing.view.ListingActivity"></activity>
+        <activity android:name=".ui.listing.view.ListingActivity" />
         <activity
             android:name=".ui.listing.list.ListingsActivity"
             android:label="@string/title_activity_listings"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.user.create.CreateUserActivity" />
         <activity android:name=".ui.listing.create.CreateListingActivity" />
-        <activity
-            android:name=".ui.user.login.LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.user.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

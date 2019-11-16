@@ -22,6 +22,9 @@ public interface KompisService {
     @POST("/users/authorize")
     Call<User> authorize(@Body LoginUser user);
 
+    @GET("/users/current")
+    Call<User> getCurrentUser(@Header("Authorization") String auth);
+
     @GET("/listings")
     Call<List<Listing>> getListings(@Header("Authorization") String auth);
 
