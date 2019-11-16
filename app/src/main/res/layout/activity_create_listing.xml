@@ -15,9 +15,9 @@
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="96dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="8dp"
         android:autofillHints="@string/prompt_title"
         android:hint="@string/prompt_title"
         android:inputType="text"
@@ -30,28 +30,27 @@
         android:id="@+id/driver"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/create_listing_driver"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <Button
         android:id="@+id/create_listing"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:enabled="false"
         android:text="@string/action_create_listing"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/driver"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintTop_toBottomOf="@+id/driver" />
 
     <ProgressBar
         android:id="@+id/loading"

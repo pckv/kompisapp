@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -8,17 +9,21 @@
             type="me.pckv.kompisapp.data.model.Listing" />
     </data>
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{listing.title}"
             android:textAppearance="?attr/textAppearanceListItem"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="1dp"
             tools:text="Title" />
 
         <LinearLayout
@@ -31,7 +36,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{listing.owner.displayName}"
+                android:paddingLeft="5dp"
+                android:paddingTop="1dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="1dp"
+                android:text="@{String.format(@string/owner_label, listing.owner.displayName)}"
                 tools:text="Owner" />
 
             <TextView
@@ -39,7 +48,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingLeft="5dp"
                 android:textAlignment="textEnd"
+                android:paddingTop="1dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="1dp"
+                android:text="@{String.format(@string/distance_label, @string/default_distance)}"
                 tools:text="5km" />
         </LinearLayout>
 
@@ -47,7 +61,11 @@
             android:id="@+id/assignee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{listing.assignee.displayName}"
+            android:paddingLeft="5dp"
+            android:paddingTop="1dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="1dp"
+            android:text="@{String.format(@string/assignee_label, listing.assignee.displayName)}"
             tools:text="Assignee" />
 
         <Switch
@@ -55,6 +73,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="@{listing.hasAssignee()}"
+            android:paddingLeft="5dp"
+            android:paddingTop="1dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="1dp"
             android:text="@string/listing_assign" />
 
         <Switch
@@ -62,6 +84,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="@{listing.active}"
+            android:paddingLeft="5dp"
+            android:paddingTop="1dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="1dp"
             android:text="@string/listing_activate" />
     </LinearLayout>
 </layout>
