@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="me.pckv.kompisapp.ui.listing.list.ListingsActivity">
     <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:onClick="onSearchClicked"
+        android:tint="@android:color/white"
+        android:title="@string/search_hint"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

@@ -18,7 +18,14 @@
         <activity
             android:name=".ui.listing.list.ListingsActivity"
             android:label="@string/title_activity_listings"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity android:name=".ui.user.create.CreateUserActivity" />
         <activity android:name=".ui.listing.create.CreateListingActivity" />
         <activity android:name=".ui.user.login.LoginActivity">

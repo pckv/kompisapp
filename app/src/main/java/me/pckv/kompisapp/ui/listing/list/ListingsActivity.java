@@ -1,10 +1,13 @@
 package me.pckv.kompisapp.ui.listing.list;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -116,7 +119,35 @@ public class ListingsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_listings, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
         return true;
+    }
+
+    public void onSearchClicked(MenuItem item) {
+        SearchView searchView = (SearchView) item.getActionView();
+
+        // Get focus of the search field and open the keyboard with a delay
+        searchView.requestFocus();
+        searchView.postDelayed(() -> {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(searchView.findFocus(), 0);
+        }, 100);
     }
 
     @Override
