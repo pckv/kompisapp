@@ -1,5 +1,7 @@
 package me.pckv.kompisapp.data;
 
+import com.alibaba.fastjson.JSON;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import me.pckv.kompisapp.data.model.CreateUser;
 import me.pckv.kompisapp.data.model.Listing;
 import me.pckv.kompisapp.data.model.LoggedInUser;
 import me.pckv.kompisapp.data.model.LoginUser;
+import me.pckv.kompisapp.data.model.ServerException;
 import me.pckv.kompisapp.data.model.User;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -71,7 +74,12 @@ public class Repository {
         }
 
         if (!response.isSuccessful()) {
-            throw new HttpStatusException(response.code(), response.message());
+            try {
+                ServerException serverException = JSON.parseObject(response.errorBody().string(), ServerException.class);
+                throw new HttpStatusException(response.code(), serverException.toFormattedMessage());
+            } catch (IOException e) {
+                throw new HttpStatusException(response.code(), "Unknown reason");
+            }
         }
 
         return response;
