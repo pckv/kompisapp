@@ -102,10 +102,8 @@ public class ListingsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CREATE_LISTING_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                listingsViewModel.getListings();
-            }
+        if (requestCode == CREATE_LISTING_REQUEST && resultCode == RESULT_OK) {
+            listingsViewModel.getListings();
         }
     }
 }
