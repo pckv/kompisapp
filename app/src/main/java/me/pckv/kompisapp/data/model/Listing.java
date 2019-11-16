@@ -19,4 +19,8 @@ public class Listing {
     public boolean hasAssignee() {
         return assignee != null;
     }
+
+    public boolean matchesQuery(String query) {
+        return title.toLowerCase().contains(query.toLowerCase());
+    }
 }
