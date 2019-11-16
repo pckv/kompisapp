@@ -87,8 +87,8 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
 
         holder.mListing = listing;
         holder.mTitleView.setText(listing.getTitle());
-        holder.mOwnerNameView.setText(listing.getOwner().getDisplayName());
-        holder.mDistanceView.setText("5km");
+        holder.mOwnerNameView.setText(String.format(mContext.getString(R.string.owner_label), listing.getOwner().getDisplayName()));
+        holder.mDistanceView.setText(String.format(mContext.getString(R.string.distance_label), mContext.getString(R.string.default_distance)));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

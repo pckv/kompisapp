@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -14,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,7 +25,6 @@ import java.util.List;
 
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.model.Listing;
-import me.pckv.kompisapp.ui.TaskResult;
 import me.pckv.kompisapp.ui.listing.create.CreateListingActivity;
 import me.pckv.kompisapp.ui.user.login.LoginActivity;
 
@@ -48,51 +46,37 @@ public class ListingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent createListingIntent = new Intent(ListingsActivity.this, CreateListingActivity.class);
-                startActivityForResult(createListingIntent, CREATE_LISTING_REQUEST);
+        fab.setOnClickListener(view -> startActivityForResult(
+                new Intent(ListingsActivity.this, CreateListingActivity.class),
+                CREATE_LISTING_REQUEST));
+
+        listingsViewModel.getListingsResult().observe(this, listingsResult -> {
+            if (listingsResult.isError()) {
+                showGetListingsFailed();
             }
-        });
-
-        listingsViewModel.getListingsResult().observe(this, new Observer<TaskResult<List<Listing>>>() {
-            @Override
-            public void onChanged(TaskResult<List<Listing>> listingsResult) {
-                if (listingsResult == null) {
-                    return;
+            if (listingsResult.isSuccess()) {
+                if (adapter == null) {
+                    setUpRecyclerView(listingsResult.getSuccess());
+                } else {
+                    updateRecyclerView(listingsResult.getSuccess());
                 }
 
-                if (listingsResult.isError()) {
-                    showGetListingsFailed();
-                }
-                if (listingsResult.isSuccess()) {
-                    if (adapter == null) {
-                        setUpRecyclerView(listingsResult.getSuccess());
-                    } else {
-                        updateRecyclerView(listingsResult.getSuccess());
-                    }
-
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
         listingsViewModel.getListings();
 
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                listingsViewModel.getListings();
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(() -> listingsViewModel.getListings());
     }
 
     private void setUpRecyclerView(List<Listing> listings) {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecoration);
         adapter = new ListingRecyclerViewAdapter(this, listings);
         recyclerView.setAdapter(adapter);
         adapter.getFilter().filter("");

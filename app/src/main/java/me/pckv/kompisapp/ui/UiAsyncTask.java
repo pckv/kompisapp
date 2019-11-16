@@ -16,6 +16,16 @@ public abstract class UiAsyncTask<T> extends AsyncTask<Void, Void, T> {
         this.liveData = liveData;
     }
 
+    public static <T> void executeAndUpdate(MutableLiveData<TaskResult<T>> liveData, RepositoryTask<T> task) {
+        new UiAsyncTask<T>(liveData) {
+
+            @Override
+            protected T doInBackground() throws HttpStatusException {
+                return task.execute();
+            }
+        }.execute();
+    }
+
     @Override
     protected T doInBackground(Void... voids) {
         try {
@@ -36,7 +46,7 @@ public abstract class UiAsyncTask<T> extends AsyncTask<Void, Void, T> {
             liveData.setValue(new TaskResult<>(result));
             onSuccess(result);
         } else {
-            liveData.setValue(new TaskResult<T>(exception));
+            liveData.setValue(new TaskResult<>(exception));
         }
     }
 
@@ -46,5 +56,10 @@ public abstract class UiAsyncTask<T> extends AsyncTask<Void, Void, T> {
      * @param result the result object
      */
     protected void onSuccess(T result) {
+    }
+
+    public interface RepositoryTask<T> {
+
+        T execute() throws HttpStatusException;
     }
 }
