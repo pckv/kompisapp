@@ -34,8 +34,12 @@ public abstract class UiAsyncTask<T> extends AsyncTask<Void, Void, T> {
 
         if (exception == null) {
             liveData.setValue(new TaskResult<>(result));
+            onSuccess(result);
         } else {
             liveData.setValue(new TaskResult<T>(exception));
         }
+    }
+
+    protected void onSuccess(T result) {
     }
 }

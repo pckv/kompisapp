@@ -2,9 +2,12 @@ package me.pckv.kompisapp.ui.listing.list;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -21,6 +24,7 @@ import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.model.Listing;
 import me.pckv.kompisapp.ui.TaskResult;
 import me.pckv.kompisapp.ui.listing.create.CreateListingActivity;
+import me.pckv.kompisapp.ui.user.login.LoginActivity;
 
 public class ListingsActivity extends AppCompatActivity {
 
@@ -84,5 +88,27 @@ public class ListingsActivity extends AppCompatActivity {
 
     private void showGetListingsFailed() {
         Toast.makeText(getApplicationContext(), R.string.create_listing_failed, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_listings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_logout) {
+            listingsViewModel.logout();
+
+            startActivity(new Intent(ListingsActivity.this, LoginActivity.class));
+            setResult(RESULT_OK);
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

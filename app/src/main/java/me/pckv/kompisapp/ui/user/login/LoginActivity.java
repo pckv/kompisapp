@@ -20,7 +20,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.model.User;
+import me.pckv.kompisapp.data.model.LoggedInUser;
 import me.pckv.kompisapp.ui.TaskResult;
 import me.pckv.kompisapp.ui.listing.list.ListingsActivity;
 import me.pckv.kompisapp.ui.user.create.CreateUserActivity;
@@ -41,6 +41,11 @@ public class LoginActivity extends AppCompatActivity {
         final Button createUserButton = findViewById(R.id.create_user);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
+        // Try to login with saved authentication
+        if (loginViewModel.checkLoggedIn()) {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+        }
+
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
@@ -57,9 +62,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<TaskResult<User>>() {
+        loginViewModel.getLoginResult().observe(this, new Observer<TaskResult<LoggedInUser>>() {
             @Override
-            public void onChanged(@Nullable TaskResult<User> loginResult) {
+            public void onChanged(@Nullable TaskResult<LoggedInUser> loginResult) {
                 if (loginResult == null) {
                     return;
                 }
@@ -130,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUiWithUser(User user) {
+    private void updateUiWithUser(LoggedInUser user) {
         String welcome = getString(R.string.welcome) + user.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
