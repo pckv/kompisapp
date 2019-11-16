@@ -1,6 +1,7 @@
 package me.pckv.kompisapp.ui.listing.create;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.model.Listing;
 import me.pckv.kompisapp.ui.TaskResult;
@@ -22,12 +27,17 @@ import me.pckv.kompisapp.ui.TaskResult;
 public class CreateListingActivity extends AppCompatActivity {
 
     private CreateListingViewModel createListingViewModel;
+    private FusedLocationProviderClient fusedLocationClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_listing);
         createListingViewModel = ViewModelProviders.of(this).get(CreateListingViewModel.class);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+
 
         final EditText titleEditText = findViewById(R.id.title);
         final Switch driverSwitch = findViewById(R.id.driver);
@@ -109,4 +119,15 @@ public class CreateListingActivity extends AppCompatActivity {
     private void showCreateListingFailed() {
         Toast.makeText(getApplicationContext(), R.string.create_listing_failed, Toast.LENGTH_SHORT).show();
     }
+    fusedLocationClient.getLastLocation()
+            .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+        @Override
+        public void onSuccess(Location location) {
+            // Got last known location. In some rare situations this can be null.
+            if (location != null) {
+                // Logic to handle location object
+            }
+        }
+    });
+    fusedLocationClient.
 }
