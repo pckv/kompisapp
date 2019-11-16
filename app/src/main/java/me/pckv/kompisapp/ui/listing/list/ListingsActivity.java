@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -24,8 +25,10 @@ import me.pckv.kompisapp.ui.listing.create.CreateListingActivity;
 
 public class ListingsActivity extends AppCompatActivity {
 
+    public static final int CREATE_LISTING_REQUEST = 1;
+
     private ListingsViewModel listingsViewModel;
-    private ListingRecyclerViewAdapter adapter;
+    private ListingRecyclerViewAdapter adapter = null;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
@@ -42,7 +45,7 @@ public class ListingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent createListingIntent = new Intent(ListingsActivity.this, CreateListingActivity.class);
-                startActivity(createListingIntent);
+                startActivityForResult(createListingIntent, CREATE_LISTING_REQUEST);
             }
         });
 
@@ -57,7 +60,12 @@ public class ListingsActivity extends AppCompatActivity {
                     showGetListingsFailed();
                 }
                 if (listingsResult.isSuccess()) {
-                    setUpRecyclerView(listingsResult.getSuccess());
+                    if (adapter == null) {
+                        setUpRecyclerView(listingsResult.getSuccess());
+                    } else {
+                        updateRecyclerView(listingsResult.getSuccess());
+                    }
+
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -78,11 +86,26 @@ public class ListingsActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ListingRecyclerViewAdapter(listings);
+        adapter = new ListingRecyclerViewAdapter(this, listings);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void updateRecyclerView(List<Listing> listings) {
+        adapter.updateListings(listings);
     }
 
     private void showGetListingsFailed() {
         Toast.makeText(getApplicationContext(), R.string.create_listing_failed, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CREATE_LISTING_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                listingsViewModel.getListings();
+            }
+        }
     }
 }
