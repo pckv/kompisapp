@@ -40,6 +40,11 @@ public abstract class UiAsyncTask<T> extends AsyncTask<Void, Void, T> {
         }
     }
 
+    /**
+     * Called when the task was successful.
+     *
+     * @param result the result object
+     */
     protected void onSuccess(T result) {
     }
 }
