@@ -8,6 +8,7 @@ import java.util.List;
 import me.pckv.kompisapp.data.model.CreateListing;
 import me.pckv.kompisapp.data.model.CreateUser;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.data.model.LoggedInUser;
 import me.pckv.kompisapp.data.model.LoginUser;
 import me.pckv.kompisapp.data.model.ServerException;
@@ -119,8 +120,8 @@ public class Repository {
         return execute(service.getListings(getAuthorization())).body();
     }
 
-    public Listing createListing(String title, boolean driver) throws HttpStatusException {
-        return execute(service.createListing(getAuthorization(), new CreateListing(title, driver))).body();
+    public Listing createListing(String title, Location location, boolean driver) throws HttpStatusException {
+        return execute(service.createListing(getAuthorization(), new CreateListing(title, location, driver))).body();
     }
 
     public void activateListing(long listingId) throws HttpStatusException {

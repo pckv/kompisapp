@@ -66,6 +66,8 @@ public class ListingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_listings);
         listingsViewModel = ViewModelProviders.of(this).get(ListingsViewModel.class);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getLastLocation();
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

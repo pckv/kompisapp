@@ -1,7 +1,6 @@
 package me.pckv.kompisapp.ui.listing.create;
 
 import android.app.Activity;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,11 +14,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.alibaba.fastjson.JSON;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import me.pckv.kompisapp.R;
+import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.data.model.Location;
 
 public class CreateListingActivity extends AppCompatActivity {
 
@@ -32,6 +34,14 @@ public class CreateListingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_listing);
         createListingViewModel = ViewModelProviders.of(this).get(CreateListingViewModel.class);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return;
+        }
+
+        Location location = JSON.parseObject(extras.getString("locationJson"), Location.class);
 
         final EditText titleEditText = findViewById(R.id.title);
         final Switch driverSwitch = findViewById(R.id.driver);
@@ -84,6 +94,7 @@ public class CreateListingActivity extends AppCompatActivity {
             loadingProgressBar.setVisibility(View.VISIBLE);
             createListingViewModel.createListing(
                     titleEditText.getText().toString(),
+                    location,
                     driverSwitch.isChecked()
             );
         });
