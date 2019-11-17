@@ -21,8 +21,8 @@
 
 
     <string name="invalid_email">Not a valid email</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="invalid_display_name">Display name must be >1 character</string>
+    <string name="invalid_password">Password must be 6 characters or longer</string>
+    <string name="invalid_display_name">Display must be 2 characters or longer</string>
 
     <string name="login_failed">"Login failed"</string>
     <string name="create_user_failed">"Failed to create user"</string>
@@ -33,7 +33,7 @@
     <string name="prompt_title">Title</string>
     <string name="create_listing_driver">Create listing as a driver </string>
 
-    <string name="invalid_title">Title is required</string>
+    <string name="invalid_title">Title must be 3 characters or longer</string>
     <string name="listing_created">Listing created</string>
 
     <string name="action_create_listing">Create listing</string>
