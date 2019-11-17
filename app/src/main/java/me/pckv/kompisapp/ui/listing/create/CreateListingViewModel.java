@@ -20,7 +20,7 @@ public class CreateListingViewModel extends ViewModel {
         this.repository = Repository.getInstance();
     }
 
-    public void createListing(final String title, final boolean driver) {
-        UiAsyncTask.executeAndUpdate(createListingResult, () -> repository.createListing(title, driver));
+    public void createListing(final String title, final Location location, final boolean driver) {
+        UiAsyncTask.executeAndUpdate(createListingResult, () -> repository.createListing(title, location, driver));
     }
 }

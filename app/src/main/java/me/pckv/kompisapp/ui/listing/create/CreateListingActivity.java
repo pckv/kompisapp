@@ -25,6 +25,7 @@ public class CreateListingActivity extends AppCompatActivity {
 
     private CreateListingViewModel createListingViewModel;
     private ActivityCreateListingBinding binding;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class CreateListingActivity extends AppCompatActivity {
             return;
         }
 
-        Location location = JSON.parseObject(extras.getString("locationJson"), Location.class);
+        location = JSON.parseObject(extras.getString("locationJson"), Location.class);
 
         // Create a validator for the form fields
         FormValidator form = new FormValidator();
@@ -49,7 +50,7 @@ public class CreateListingActivity extends AppCompatActivity {
         binding.setLifecycleOwner(this);
 
         // Bind the result of the create user action
-        createListingViewModel.getCreateUserResult().observe(this, createListingResult -> {
+        createListingViewModel.getCreateListingResult().observe(this, createListingResult -> {
             binding.loading.setVisibility(View.GONE);
 
             if (createListingResult.isError()) {
