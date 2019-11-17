@@ -12,60 +12,60 @@ import me.pckv.kompisapp.ui.UiAsyncTask;
 public class ListingViewModel extends ViewModel {
 
     private Repository repository;
-    private long listingId;
+    private Listing listing;
 
     @Getter
-    private MutableLiveData<TaskResult<Void>> deleteResult = new MutableLiveData<>();
+    private MutableLiveData<TaskResult<Boolean>> deleteResult = new MutableLiveData<>();
     @Getter
     private MutableLiveData<TaskResult<Boolean>> activateResult = new MutableLiveData<>();
     @Getter
     private MutableLiveData<TaskResult<Boolean>> assignResult = new MutableLiveData<>();
 
-    public ListingViewModel(long listingId) {
+    public ListingViewModel(Listing listing) {
         this.repository = Repository.getInstance();
-        this.listingId = listingId;
+        this.listing = listing;
     }
 
 
-    public boolean isOwner(Listing listing) {
+    public boolean isOwner() {
         return repository.isOwner(listing);
     }
 
-    public boolean isAssignee(Listing listing) {
+    public boolean isAssignee() {
         return repository.isAssignee(listing);
     }
 
     public void deleteListing() {
         UiAsyncTask.executeAndUpdate(deleteResult, () -> {
-            repository.deleteListing(listingId);
-            return null;
+            repository.deleteListing(listing.getId());
+            return true;
         });
     }
 
     public void activateListing() {
         UiAsyncTask.executeAndUpdate(activateResult, () -> {
-            repository.activateListing(listingId);
+            repository.activateListing(listing.getId());
             return true;
         });
     }
 
     public void deactivateListing() {
         UiAsyncTask.executeAndUpdate(activateResult, () -> {
-            repository.deactivateListing(listingId);
+            repository.deactivateListing(listing.getId());
             return false;
         });
     }
 
     public void assignListing() {
         UiAsyncTask.executeAndUpdate(assignResult, () -> {
-            repository.assignListing(listingId);
+            repository.assignListing(listing.getId());
             return true;
         });
     }
 
     public void unassignListing() {
         UiAsyncTask.executeAndUpdate(assignResult, () -> {
-            repository.unassignListing(listingId);
+            repository.unassignListing(listing.getId());
             return false;
         });
     }
