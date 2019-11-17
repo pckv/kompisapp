@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Patterns;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -22,7 +21,6 @@ import me.pckv.kompisapp.ui.UiAsyncTask;
 
 public class LoginViewModel extends AndroidViewModel {
 
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<TaskResult<LoggedInUser>> loginResult = new MutableLiveData<>();
     private Repository repository;
 
@@ -37,10 +35,6 @@ public class LoginViewModel extends AndroidViewModel {
 
         sharedPreferences = application.getSharedPreferences(
                 application.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-    }
-
-    public LiveData<LoginFormState> getLoginFormState() {
-        return loginFormState;
     }
 
     public LiveData<TaskResult<LoggedInUser>> getLoginResult() {
@@ -99,29 +93,5 @@ public class LoginViewModel extends AndroidViewModel {
                 updateLoggedInUser(result);
             }
         }.execute();
-    }
-
-    public void loginDataChanged(String email, String password) {
-        if (!isEmailValid(email)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_email, null));
-        } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
-        } else {
-            loginFormState.setValue(new LoginFormState(true));
-        }
-    }
-
-    // A placeholder username validation check
-    private boolean isEmailValid(String email) {
-        if (email == null) {
-            return false;
-        }
-
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    // A placeholder password validation check
-    private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
     }
 }
