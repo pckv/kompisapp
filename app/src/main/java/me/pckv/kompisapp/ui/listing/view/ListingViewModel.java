@@ -15,6 +15,8 @@ public class ListingViewModel extends ViewModel {
     private long listingId;
 
     @Getter
+    private MutableLiveData<TaskResult<Void>> deleteResult = new MutableLiveData<>();
+    @Getter
     private MutableLiveData<TaskResult<Boolean>> activateResult = new MutableLiveData<>();
     @Getter
     private MutableLiveData<TaskResult<Boolean>> assignResult = new MutableLiveData<>();
@@ -31,6 +33,13 @@ public class ListingViewModel extends ViewModel {
 
     public boolean isAssignee(Listing listing) {
         return repository.isAssignee(listing);
+    }
+
+    public void deleteListing() {
+        UiAsyncTask.executeAndUpdate(deleteResult, () -> {
+            repository.deleteListing(listingId);
+            return null;
+        });
     }
 
     public void activateListing() {
