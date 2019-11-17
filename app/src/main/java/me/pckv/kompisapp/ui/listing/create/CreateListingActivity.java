@@ -24,7 +24,6 @@ import me.pckv.kompisapp.R;
 public class CreateListingActivity extends AppCompatActivity {
 
     private CreateListingViewModel createListingViewModel;
-    private FusedLocationProviderClient fusedLocationClient;
 
 
     @Override
@@ -32,8 +31,6 @@ public class CreateListingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_listing);
         createListingViewModel = ViewModelProviders.of(this).get(CreateListingViewModel.class);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
 
 
         final EditText titleEditText = findViewById(R.id.title);
@@ -101,15 +98,4 @@ public class CreateListingActivity extends AppCompatActivity {
     private void showCreateListingFailed() {
         Toast.makeText(getApplicationContext(), R.string.create_listing_failed, Toast.LENGTH_SHORT).show();
     }
-    fusedLocationClient.getLastLocation()
-            .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-        @Override
-        public void onSuccess(Location location) {
-            // Got last known location. In some rare situations this can be null.
-            if (location != null) {
-                // Logic to handle location object
-            }
-        }
-    });
-    fusedLocationClient.
 }
