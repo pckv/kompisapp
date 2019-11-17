@@ -5,6 +5,9 @@
 
     <string name="welcome">"Welcome "</string>
 
+    <string name="prompt_yes">Yes</string>
+    <string name="prompt_no">No</string>
+
     <!-- register and login -->
     <string name="title_activity_login">Sign in</string>
 
@@ -53,6 +56,10 @@
     <string name="listing_deactivated">Deactivated listing</string>
     <string name="listing_assigned">You are now assigned to this listing</string>
     <string name="listing_unassigned">You are no longer assigned to this listing</string>
+
+    <string name="delete_listing_dialog">Delete listing</string>
+    <string name="delete_listing_dialog_message">Are you sure you want to delete this listing?</string>
+
     <string name="listing_deleted">Listing deleted</string>
 
     <string name="owner_label">Owner %s</string>

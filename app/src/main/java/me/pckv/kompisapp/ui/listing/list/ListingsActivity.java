@@ -30,7 +30,7 @@ import me.pckv.kompisapp.ui.user.login.LoginActivity;
 
 public class ListingsActivity extends AppCompatActivity {
 
-    public static final int CREATE_LISTING_REQUEST = 1;
+    public static final int REFRESH_LISTINGS_REQUEST = 1;
 
     private ListingsViewModel listingsViewModel;
     private ListingRecyclerViewAdapter adapter = null;
@@ -48,7 +48,7 @@ public class ListingsActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> startActivityForResult(
                 new Intent(ListingsActivity.this, CreateListingActivity.class),
-                CREATE_LISTING_REQUEST));
+                REFRESH_LISTINGS_REQUEST));
 
         listingsViewModel.getListingsResult().observe(this, listingsResult -> {
             if (listingsResult.isError()) {
@@ -95,7 +95,7 @@ public class ListingsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CREATE_LISTING_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == REFRESH_LISTINGS_REQUEST && resultCode == RESULT_OK) {
             listingsViewModel.getListings();
         }
     }

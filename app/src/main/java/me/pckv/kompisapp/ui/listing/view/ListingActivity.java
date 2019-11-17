@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
@@ -100,6 +101,7 @@ public class ListingActivity extends AppCompatActivity {
             }
             if (deleteResult.isSuccess()) {
                 showDeleteListingSuccess();
+
                 setResult(RESULT_OK);
                 finish();
             }
@@ -124,12 +126,21 @@ public class ListingActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_delete) {
-            // TODO: show prompt
-            listingViewModel.deleteListing();
+            showDeleteListingDialog();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDeleteListingDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.delete_listing_dialog)
+                .setMessage(R.string.delete_listing_dialog_message)
+                .setCancelable(true)
+                .setPositiveButton(R.string.prompt_yes, ((dialog, which) -> listingViewModel.deleteListing()))
+                .setNegativeButton(R.string.prompt_no, null)
+                .show();
     }
 
     private void showChangeSwitchSuccess(@StringRes Integer successString) {
