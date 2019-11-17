@@ -82,6 +82,7 @@ public class ListingActivity extends AppCompatActivity {
             if (activateResult.isSuccess()) {
                 showChangeSwitchSuccess(activateResult.getSuccess() ?
                         R.string.listing_activated : R.string.listing_deactivated);
+                setResult(RESULT_OK);
             }
         });
 
@@ -92,6 +93,7 @@ public class ListingActivity extends AppCompatActivity {
             if (assignResult.isSuccess()) {
                 showChangeSwitchSuccess(assignResult.getSuccess() ?
                         R.string.listing_assigned : R.string.listing_unassigned);
+                setResult(RESULT_OK);
             }
         });
 
