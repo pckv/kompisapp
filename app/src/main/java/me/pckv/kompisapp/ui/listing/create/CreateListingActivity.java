@@ -11,15 +11,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.alibaba.fastjson.JSON;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import me.pckv.kompisapp.R;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.databinding.ActivityCreateListingBinding;
 import me.pckv.kompisapp.ui.FormValidator;
-import me.pckv.kompisapp.data.model.Listing;
-import me.pckv.kompisapp.data.model.Location;
 
 public class CreateListingActivity extends AppCompatActivity {
 
