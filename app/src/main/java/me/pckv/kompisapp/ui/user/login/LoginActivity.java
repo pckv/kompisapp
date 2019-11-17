@@ -3,56 +3,49 @@ package me.pckv.kompisapp.ui.user.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.model.LoggedInUser;
+import me.pckv.kompisapp.databinding.ActivityLoginBinding;
+import me.pckv.kompisapp.ui.FormValidator;
 import me.pckv.kompisapp.ui.listing.list.ListingsActivity;
 import me.pckv.kompisapp.ui.user.create.CreateUserActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
+    private ActivityLoginBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-
-        final EditText usernameEditText = findViewById(R.id.email);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final Button createUserButton = findViewById(R.id.create_user);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         // Try to login with saved authentication
         if (loginViewModel.checkLoggedIn()) {
-            loadingProgressBar.setVisibility(View.VISIBLE);
+            binding.loading.setVisibility(View.VISIBLE);
         }
 
-        loginViewModel.getLoginFormState().observe(this, loginFormState -> {
-            loginButton.setEnabled(loginFormState.isDataValid());
-            if (loginFormState.getEmailError() != null) {
-                usernameEditText.setError(getString(loginFormState.getEmailError()));
-            }
-            if (loginFormState.getPasswordError() != null) {
-                passwordEditText.setError(getString(loginFormState.getPasswordError()));
-            }
-        });
+        // Create a validator for the form fields
+        FormValidator form = new FormValidator();
+        form.addField(R.id.email, getString(R.string.invalid_email), email -> Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        form.addField(R.id.password, getString(R.string.invalid_password), FormValidator.lengthValidator(6));
 
+        binding.setForm(form);
+        binding.setLifecycleOwner(this);
+
+        // Bind the result of the login action
         loginViewModel.getLoginResult().observe(this, loginResult -> {
-            loadingProgressBar.setVisibility(View.GONE);
+            binding.loading.setVisibility(View.GONE);
 
             if (loginResult.isError()) {
                 showLoginFailed();
@@ -67,43 +60,24 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+        // Bind submit button and keyboard event
+        binding.login.setOnClickListener(v -> login());
+        binding.password.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                login();
             }
             return false;
         });
 
-        loginButton.setOnClickListener(v -> {
-            loadingProgressBar.setVisibility(View.VISIBLE);
-            loginViewModel.login(usernameEditText.getText().toString(),
-                    passwordEditText.getText().toString());
-        });
+        // Bind the create user button
+        binding.createUser.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, CreateUserActivity.class)));
+    }
 
-        createUserButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, CreateUserActivity.class);
-            startActivity(intent);
-        });
+    private void login() {
+        binding.loading.setVisibility(View.VISIBLE);
+        loginViewModel.login(
+                binding.email.getText().toString().trim(),
+                binding.password.getText().toString().trim());
     }
 
     private void updateUiWithUser(LoggedInUser user) {
