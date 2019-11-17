@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,15 +27,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.alibaba.fastjson.JSON;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
-import java.util.Locale;
 
 import me.pckv.kompisapp.BuildConfig;
 import me.pckv.kompisapp.R;
@@ -47,27 +46,19 @@ import me.pckv.kompisapp.ui.user.login.LoginActivity;
 public class ListingsActivity extends AppCompatActivity {
 
     public static final int CREATE_LISTING_REQUEST = 1;
-
-    private ListingsViewModel listingsViewModel;
-    private ListingRecyclerViewAdapter adapter = null;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private static final String TAG = ListingsActivity.class.getSimpleName();
-
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-
-    /**
-     * Provides the entry point to the Fused Location Provider API.
-     */
-    private FusedLocationProviderClient mFusedLocationClient;
-
     /**
      * Represents a geographical location.
      */
     protected Location mLastLocation;
-
-    private String mLatitudeLabel;
-    private String mLongitudeLabel;
+    private ListingsViewModel listingsViewModel;
+    private ListingRecyclerViewAdapter adapter = null;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    /**
+     * Provides the entry point to the Fused Location Provider API.
+     */
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +71,14 @@ public class ListingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> startActivityForResult(
-                new Intent(ListingsActivity.this, CreateListingActivity.class),
-                CREATE_LISTING_REQUEST));
+        fab.setOnClickListener(view -> {
+            Intent createListingIntent = new Intent(ListingsActivity.this, CreateListingActivity.class);
+            me.pckv.kompisapp.data.model.Location location = new me.pckv.kompisapp.data.model.Location(
+                    (float) mLastLocation.getLatitude(), (float) mLastLocation.getLongitude(), mLastLocation.getAccuracy());
+            createListingIntent.putExtra("locationJson", JSON.toJSONString(location));
+            startActivityForResult(createListingIntent, CREATE_LISTING_REQUEST);
+
+        });
 
         listingsViewModel.getListingsResult().observe(this, listingsResult -> {
             if (listingsResult.isError()) {
