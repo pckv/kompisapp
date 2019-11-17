@@ -64,9 +64,9 @@ public class CreateUserActivity extends AppCompatActivity {
     private void createUser() {
         binding.loading.setVisibility(View.VISIBLE);
         createUserViewModel.createUser(
-                binding.displayName.getText().toString(),
-                binding.email.getText().toString(),
-                binding.password.getText().toString());
+                binding.displayName.getText().toString().trim(),
+                binding.email.getText().toString().trim(),
+                binding.password.getText().toString().trim());
     }
 
     private void showCreateUserSuccess() {

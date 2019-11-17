@@ -1,9 +1,9 @@
 package me.pckv.kompisapp.ui.listing.view;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import lombok.Getter;
 import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.Listing;
 import me.pckv.kompisapp.ui.TaskResult;
@@ -14,7 +14,9 @@ public class ListingViewModel extends ViewModel {
     private Repository repository;
     private long listingId;
 
+    @Getter
     private MutableLiveData<TaskResult<Boolean>> activateResult = new MutableLiveData<>();
+    @Getter
     private MutableLiveData<TaskResult<Boolean>> assignResult = new MutableLiveData<>();
 
     public ListingViewModel(long listingId) {
@@ -22,13 +24,6 @@ public class ListingViewModel extends ViewModel {
         this.listingId = listingId;
     }
 
-    public LiveData<TaskResult<Boolean>> getActivateResult() {
-        return activateResult;
-    }
-
-    public LiveData<TaskResult<Boolean>> getAssignResult() {
-        return assignResult;
-    }
 
     public boolean isOwner(Listing listing) {
         return repository.isOwner(listing);

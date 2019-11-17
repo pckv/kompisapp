@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
+import lombok.Getter;
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.Listing;
@@ -18,6 +19,7 @@ import me.pckv.kompisapp.ui.UiAsyncTask;
 
 public class ListingsViewModel extends AndroidViewModel {
 
+    @Getter
     private MutableLiveData<TaskResult<List<Listing>>> listingsResult = new MutableLiveData<>();
     private Repository repository;
 
@@ -31,10 +33,6 @@ public class ListingsViewModel extends AndroidViewModel {
 
         sharedPreferences = application.getSharedPreferences(
                 application.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-    }
-
-    public MutableLiveData<TaskResult<List<Listing>>> getListingsResult() {
-        return listingsResult;
     }
 
     public void getListings() {

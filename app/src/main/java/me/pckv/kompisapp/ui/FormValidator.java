@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.HashMap;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public class FormValidator {
@@ -48,17 +49,12 @@ public class FormValidator {
         boolean isValid(String field);
     }
 
+    @AllArgsConstructor
     private class FormField {
 
         protected MutableLiveData<String> liveData;
         protected Validator validator;
         private String errorMessage;
-
-        public FormField(MutableLiveData<String> liveData, Validator validator, String errorMessage) {
-            this.liveData = liveData;
-            this.validator = validator;
-            this.errorMessage = errorMessage;
-        }
 
         protected boolean isValid() {
             String value = liveData.getValue();
