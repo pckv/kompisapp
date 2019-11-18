@@ -4,9 +4,10 @@
 
     <data>
 
+        <import type="android.view.View" />
         <variable
-            name="listing"
-            type="me.pckv.kompisapp.data.model.Listing" />
+            name="viewmodel"
+            type="me.pckv.kompisapp.ui.listing.view.ListingViewModel" />
     </data>
 
     <LinearLayout
@@ -36,7 +37,7 @@
             android:paddingTop="5dp"
             android:paddingRight="5dp"
             android:paddingBottom="1dp"
-            android:text="@{listing.title}"
+            android:text="@{viewmodel.listing.title}"
             android:textAppearance="?attr/textAppearanceListItem"
             tools:text="Title" />
 
@@ -54,7 +55,7 @@
                 android:paddingTop="1dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="1dp"
-                android:text="@{String.format(@string/owner_label, listing.owner.displayName)}"
+                android:text="@{String.format(@string/owner_label, viewmodel.listing.owner.displayName)}"
                 tools:text="Owner" />
 
             <TextView
@@ -79,14 +80,16 @@
             android:paddingTop="1dp"
             android:paddingRight="5dp"
             android:paddingBottom="1dp"
-            android:text="@{String.format(@string/assignee_label, listing.assignee.displayName)}"
+            android:text="@{String.format(@string/assignee_label, viewmodel.listing.assignee.displayName)}"
+            android:visibility="@{viewmodel.listing.hasAssignee() ? View.VISIBLE : View.GONE}"
             tools:text="Assignee" />
 
         <Switch
             android:id="@+id/assign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="@{listing.hasAssignee()}"
+            android:checked="@{viewmodel.listing.hasAssignee()}"
+            android:visibility="@{viewmodel.canAssign() ? View.VISIBLE : View.GONE}"
             android:paddingLeft="5dp"
             android:paddingTop="1dp"
             android:paddingRight="5dp"
@@ -97,7 +100,8 @@
             android:id="@+id/activate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="@{listing.active}"
+            android:checked="@{viewmodel.listing.active}"
+            android:visibility="@{viewmodel.owner ? View.VISIBLE : View.GONE}"
             android:paddingLeft="5dp"
             android:paddingTop="1dp"
             android:paddingRight="5dp"

@@ -3,7 +3,6 @@ package me.pckv.kompisapp.ui.listing.view;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,19 +44,7 @@ public class ListingActivity extends AppCompatActivity {
         listingViewModel = ViewModelProviders.of(this, new ListingViewModelFactory(listing))
                 .get(ListingViewModel.class);
 
-        binding.setListing(listing);
-
-        if (!listingViewModel.isOwner() && (listing.hasAssignee() && !listingViewModel.isAssignee())) {
-            binding.assign.setVisibility(View.GONE);
-        }
-
-        if (!listingViewModel.isOwner()) {
-            binding.activate.setVisibility(View.GONE);
-        }
-
-        if (!listing.hasAssignee()) {
-            binding.assignee.setVisibility(View.GONE);
-        }
+        binding.setViewmodel(listingViewModel);
 
         binding.activate.setOnClickListener(v -> {
             if (binding.activate.isChecked()) {
@@ -82,7 +69,9 @@ public class ListingActivity extends AppCompatActivity {
             if (activateResult.isSuccess()) {
                 showChangeSwitchSuccess(activateResult.getSuccess() ?
                         R.string.listing_activated : R.string.listing_deactivated);
+
                 setResult(RESULT_OK);
+                binding.setViewmodel(listingViewModel);
             }
         });
 
@@ -93,7 +82,9 @@ public class ListingActivity extends AppCompatActivity {
             if (assignResult.isSuccess()) {
                 showChangeSwitchSuccess(assignResult.getSuccess() ?
                         R.string.listing_assigned : R.string.listing_unassigned);
+
                 setResult(RESULT_OK);
+                binding.setViewmodel(listingViewModel);
             }
         });
 
