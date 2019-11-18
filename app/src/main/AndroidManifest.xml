@@ -23,7 +23,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="google_maps_key"/>
-        <activity android:name=".ui.listing.view.ListingActivity"></activity>
         <activity
             android:name=".ui.listing.view.ListingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
