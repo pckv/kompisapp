@@ -9,6 +9,7 @@ import me.pckv.kompisapp.data.model.LoginUser;
 import me.pckv.kompisapp.data.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -30,6 +31,9 @@ public interface KompisService {
 
     @POST("/listings")
     Call<Listing> createListing(@Header("Authorization") String auth, @Body CreateListing listing);
+
+    @DELETE("/listings/{id}")
+    Call<Void> deleteListing(@Header("Authorization") String auth, @Path("id") long listingId);
 
     @GET("/listings/{id}/activate")
     Call<Void> activateListing(@Header("Authorization") String auth, @Path("id") long listingId);

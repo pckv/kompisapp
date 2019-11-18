@@ -45,7 +45,7 @@ import me.pckv.kompisapp.ui.user.login.LoginActivity;
 
 public class ListingsActivity extends AppCompatActivity {
 
-    public static final int CREATE_LISTING_REQUEST = 1;
+    public static final int REFRESH_LISTINGS_REQUEST = 1;
     private static final String TAG = ListingsActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     /**
@@ -73,12 +73,13 @@ public class ListingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(view -> {
             Intent createListingIntent = new Intent(ListingsActivity.this, CreateListingActivity.class);
             me.pckv.kompisapp.data.model.Location location = new me.pckv.kompisapp.data.model.Location(
                     (float) mLastLocation.getLatitude(), (float) mLastLocation.getLongitude(), mLastLocation.getAccuracy());
             createListingIntent.putExtra("locationJson", JSON.toJSONString(location));
-            startActivityForResult(createListingIntent, CREATE_LISTING_REQUEST);
+            startActivityForResult(createListingIntent, REFRESH_LISTINGS_REQUEST);
 
         });
 
@@ -127,7 +128,7 @@ public class ListingsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CREATE_LISTING_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == REFRESH_LISTINGS_REQUEST && resultCode == RESULT_OK) {
             listingsViewModel.getListings();
         }
     }

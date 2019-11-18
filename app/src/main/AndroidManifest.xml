@@ -25,6 +25,9 @@
             android:value="google_maps_key"/>
         <activity android:name=".ui.listing.view.ListingActivity"></activity>
         <activity
+            android:name=".ui.listing.view.ListingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".ui.listing.list.ListingsActivity"
             android:label="@string/title_activity_listings"
             android:theme="@style/AppTheme.NoActionBar">

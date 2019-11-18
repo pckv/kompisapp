@@ -1,5 +1,6 @@
 package me.pckv.kompisapp.ui.listing.list;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -24,7 +25,6 @@ import me.pckv.kompisapp.ui.listing.view.ListingActivity;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Listing} and makes a call to the
  * specified.
- * TODO: Replace the implementation with code for your data type.
  */
 public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecyclerViewAdapter.ViewHolder> implements Filterable {
 
@@ -90,13 +90,10 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
         holder.mOwnerNameView.setText(String.format(mContext.getString(R.string.owner_label), listing.getOwner().getDisplayName()));
         holder.mDistanceView.setText(String.format(mContext.getString(R.string.distance_label), mContext.getString(R.string.default_distance)));
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, ListingActivity.class);
-                intent.putExtra("listingJson", JSON.toJSONString(listing));
-                mContext.startActivity(intent);
-            }
+        holder.mView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, ListingActivity.class);
+            intent.putExtra("listingJson", JSON.toJSONString(listing));
+            ((Activity) mContext).startActivityForResult(intent, ListingsActivity.REFRESH_LISTINGS_REQUEST);
         });
     }
 

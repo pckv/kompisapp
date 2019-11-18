@@ -124,6 +124,10 @@ public class Repository {
         return execute(service.createListing(getAuthorization(), new CreateListing(title, location, driver))).body();
     }
 
+    public void deleteListing(long listingId) throws HttpStatusException {
+        execute(service.deleteListing(getAuthorization(), listingId));
+    }
+
     public void activateListing(long listingId) throws HttpStatusException {
         execute(service.activateListing(getAuthorization(), listingId));
     }
