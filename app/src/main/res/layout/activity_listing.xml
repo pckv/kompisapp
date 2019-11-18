@@ -108,10 +108,16 @@
             android:paddingBottom="1dp"
             android:text="@string/listing_activate" />
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="619dp" />
+            android:id="@+id/map_container"
+            android:layout_height="0dp"
+            android:layout_weight="50">
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/listings_map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
     </LinearLayout>
 </layout>
