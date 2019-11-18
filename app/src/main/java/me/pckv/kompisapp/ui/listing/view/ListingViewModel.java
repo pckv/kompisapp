@@ -12,6 +12,8 @@ import me.pckv.kompisapp.ui.UiAsyncTask;
 public class ListingViewModel extends ViewModel {
 
     private Repository repository;
+
+    @Getter
     private Listing listing;
 
     @Getter
@@ -26,13 +28,16 @@ public class ListingViewModel extends ViewModel {
         this.listing = listing;
     }
 
-
     public boolean isOwner() {
         return repository.isOwner(listing);
     }
 
     public boolean isAssignee() {
         return repository.isAssignee(listing);
+    }
+
+    public boolean canAssign() {
+        return isOwner() || (!listing.hasAssignee() || isAssignee());
     }
 
     public void deleteListing() {
@@ -46,27 +51,27 @@ public class ListingViewModel extends ViewModel {
         UiAsyncTask.executeAndUpdate(activateResult, () -> {
             repository.activateListing(listing.getId());
             return true;
-        });
+        }, result -> listing.setActive(true));
     }
 
     public void deactivateListing() {
         UiAsyncTask.executeAndUpdate(activateResult, () -> {
             repository.deactivateListing(listing.getId());
             return false;
-        });
+        }, result -> listing.setActive(false));
     }
 
     public void assignListing() {
         UiAsyncTask.executeAndUpdate(assignResult, () -> {
             repository.assignListing(listing.getId());
             return true;
-        });
+        }, result -> listing.setAssignee(repository.getLoggedInAsUser()));
     }
 
     public void unassignListing() {
         UiAsyncTask.executeAndUpdate(assignResult, () -> {
             repository.unassignListing(listing.getId());
             return false;
-        });
+        }, result -> listing.setAssignee(null));
     }
 }

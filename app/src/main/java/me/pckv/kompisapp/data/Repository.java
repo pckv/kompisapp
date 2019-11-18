@@ -45,6 +45,10 @@ public class Repository {
         return "Bearer " + loggedInUser.getToken();
     }
 
+    public User getLoggedInAsUser() {
+        return new User(loggedInUser.getId(), loggedInUser.getDisplayName());
+    }
+
     public boolean isLoggedIn() {
         return loggedInUser != null;
     }
