@@ -30,8 +30,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.alibaba.fastjson.JSON;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -66,7 +64,7 @@ public class ListingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_listings);
         listingsViewModel = ViewModelProviders.of(this).get(ListingsViewModel.class);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
+        getLastLocation(false);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -74,14 +72,7 @@ public class ListingsActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
-        fab.setOnClickListener(view -> {
-            Intent createListingIntent = new Intent(ListingsActivity.this, CreateListingActivity.class);
-            me.pckv.kompisapp.data.model.Location location = new me.pckv.kompisapp.data.model.Location(
-                    (float) mLastLocation.getLatitude(), (float) mLastLocation.getLongitude(), mLastLocation.getAccuracy());
-            createListingIntent.putExtra("locationJson", JSON.toJSONString(location));
-            startActivityForResult(createListingIntent, REFRESH_LISTINGS_REQUEST);
-
-        });
+        fab.setOnClickListener(view -> getLastLocation(true));
 
         listingsViewModel.getListingsResult().observe(this, listingsResult -> {
             if (listingsResult.isError()) {
@@ -190,7 +181,7 @@ public class ListingsActivity extends AppCompatActivity {
         if (!checkPermissions()) {
             requestPermissions();
         } else {
-            getLastLocation();
+            getLastLocation(false);
         }
     }
 
@@ -203,17 +194,21 @@ public class ListingsActivity extends AppCompatActivity {
      * Note: this method should be called after location permission has been granted.
      */
     @SuppressWarnings("MissingPermission")
-    private void getLastLocation() {
+    private void getLastLocation(boolean startCreateActivity) {
         mFusedLocationClient.getLastLocation()
-                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            mLastLocation = task.getResult();
-                        } else {
-                            Log.w(TAG, "getLastLocation:exception", task.getException());
-                            showSnackbar(getString(R.string.no_location_detected));
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        mLastLocation = task.getResult();
+                        if (startCreateActivity) {
+                            Intent createListingIntent = new Intent(ListingsActivity.this, CreateListingActivity.class);
+                            me.pckv.kompisapp.data.model.Location location = new me.pckv.kompisapp.data.model.Location(
+                                    (float) mLastLocation.getLatitude(), (float) mLastLocation.getLongitude(), mLastLocation.getAccuracy());
+                            createListingIntent.putExtra("locationJson", JSON.toJSONString(location));
+                            startActivityForResult(createListingIntent, REFRESH_LISTINGS_REQUEST);
                         }
+                    } else {
+                        Log.w(TAG, "getLastLocation:exception", task.getException());
+                        showSnackbar(getString(R.string.no_location_detected));
                     }
                 });
     }
@@ -272,12 +267,9 @@ public class ListingsActivity extends AppCompatActivity {
             Log.i(TAG, "Displaying permission rationale to provide additional context.");
 
             showSnackbar(R.string.permission_rationale, android.R.string.ok,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // Request permission
-                            startLocationPermissionRequest();
-                        }
+                    view -> {
+                        // Request permission
+                        startLocationPermissionRequest();
                     });
 
         } else {
@@ -303,7 +295,7 @@ public class ListingsActivity extends AppCompatActivity {
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted.
-                getLastLocation();
+                getLastLocation(false);
             } else {
                 // Permission denied.
 
@@ -317,19 +309,16 @@ public class ListingsActivity extends AppCompatActivity {
                 // when permissions are denied. Otherwise, your app could appear unresponsive to
                 // touches or interactions which have required permissions.
                 showSnackbar(R.string.permission_denied_explanation, R.string.settings,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Build intent that displays the App settings screen.
-                                Intent intent = new Intent();
-                                intent.setAction(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package",
-                                        BuildConfig.APPLICATION_ID, null);
-                                intent.setData(uri);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
+                        view -> {
+                            // Build intent that displays the App settings screen.
+                            Intent intent = new Intent();
+                            intent.setAction(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package",
+                                    BuildConfig.APPLICATION_ID, null);
+                            intent.setData(uri);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                         });
             }
         }

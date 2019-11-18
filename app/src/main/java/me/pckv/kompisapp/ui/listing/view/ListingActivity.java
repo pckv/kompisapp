@@ -21,9 +21,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.alibaba.fastjson.JSON;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.HttpStatusException;
@@ -36,6 +39,7 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
 
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     private MapView mMapView;
+    private Listing listing;
 
 
     @Override
@@ -56,7 +60,7 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
         mMapView = this.findViewById(R.id.listings_map);
         initGoogleMap(savedInstanceState);
 
-        Listing listing = JSON.parseObject(extras.getString("listingJson"), Listing.class);
+        listing = JSON.parseObject(extras.getString("listingJson"), Listing.class);
 
         listingViewModel = ViewModelProviders.of(this, new ListingViewModelFactory(listing))
                 .get(ListingViewModel.class);
@@ -226,16 +230,12 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         map.setMyLocationEnabled(true);
+        LatLng deviceLocation = new LatLng(listing.getLocation().getLatitude(), listing.getLocation().getLongitude());
+        map.addMarker(new MarkerOptions().position(deviceLocation)).setTitle("Customer at:");
+        map.moveCamera(CameraUpdateFactory.newLatLng(deviceLocation));
     }
 
     @Override

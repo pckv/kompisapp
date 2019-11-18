@@ -35,9 +35,7 @@ public class CreateListingActivity extends AppCompatActivity {
             finish();
             return;
         }
-
         location = JSON.parseObject(extras.getString("locationJson"), Location.class);
-
         // Create a validator for the form fields
         FormValidator form = new FormValidator();
         form.addField(R.id.title, getString(R.string.invalid_title), FormValidator.lengthValidator(3));
