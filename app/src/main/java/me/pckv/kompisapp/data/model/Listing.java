@@ -11,6 +11,7 @@ public class Listing {
     private String title;
     private boolean driver;
     private boolean active;
+    private Location location;
     private User owner;
 
     @Nullable

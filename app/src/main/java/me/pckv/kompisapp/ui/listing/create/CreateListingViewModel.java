@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import lombok.Getter;
 import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.ui.TaskResult;
 import me.pckv.kompisapp.ui.UiAsyncTask;
 
@@ -19,7 +20,7 @@ public class CreateListingViewModel extends ViewModel {
         this.repository = Repository.getInstance();
     }
 
-    public void createListing(final String title, final boolean driver) {
-        UiAsyncTask.executeAndUpdate(createListingResult, () -> repository.createListing(title, driver));
+    public void createListing(final String title, final Location location, final boolean driver) {
+        UiAsyncTask.executeAndUpdate(createListingResult, () -> repository.createListing(title, location, driver));
     }
 }

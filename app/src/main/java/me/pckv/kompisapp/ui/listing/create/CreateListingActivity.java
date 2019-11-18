@@ -10,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.alibaba.fastjson.JSON;
+
 import me.pckv.kompisapp.R;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.databinding.ActivityCreateListingBinding;
 import me.pckv.kompisapp.ui.FormValidator;
 
@@ -18,12 +21,22 @@ public class CreateListingActivity extends AppCompatActivity {
 
     private CreateListingViewModel createListingViewModel;
     private ActivityCreateListingBinding binding;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_listing);
         createListingViewModel = ViewModelProviders.of(this).get(CreateListingViewModel.class);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return;
+        }
+
+        location = JSON.parseObject(extras.getString("locationJson"), Location.class);
 
         // Create a validator for the form fields
         FormValidator form = new FormValidator();
@@ -61,6 +74,7 @@ public class CreateListingActivity extends AppCompatActivity {
         binding.loading.setVisibility(View.VISIBLE);
         createListingViewModel.createListing(
                 binding.title.getText().toString().trim(),
+                location,
                 binding.driver.isChecked());
     }
 

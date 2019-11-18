@@ -8,5 +8,6 @@ import lombok.Data;
 public class CreateListing {
 
     private String title;
+    private Location location;
     private boolean driver;
 }
