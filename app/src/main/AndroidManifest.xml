@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.listing.view.ListingActivity" />
+        <activity
+            android:name=".ui.listing.view.ListingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.listing.list.ListingsActivity"
             android:label="@string/title_activity_listings"

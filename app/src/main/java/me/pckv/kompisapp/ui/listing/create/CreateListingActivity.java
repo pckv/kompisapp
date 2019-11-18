@@ -33,7 +33,7 @@ public class CreateListingActivity extends AppCompatActivity {
         binding.setLifecycleOwner(this);
 
         // Bind the result of the create user action
-        createListingViewModel.getCreateUserResult().observe(this, createListingResult -> {
+        createListingViewModel.getCreateListingResult().observe(this, createListingResult -> {
             binding.loading.setVisibility(View.GONE);
 
             if (createListingResult.isError()) {
