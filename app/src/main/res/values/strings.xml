@@ -65,7 +65,6 @@
     <string name="owner_label">Owner %s</string>
     <string name="assignee_label">Assignee %s</string>
     <string name="distance_label">Distance %.1f km</string>
-    <string name="default_distance">5 km</string>
 
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.</string>
