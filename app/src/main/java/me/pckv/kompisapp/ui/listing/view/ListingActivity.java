@@ -235,6 +235,7 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
         map.setMyLocationEnabled(true);
         LatLng deviceLocation = new LatLng(listing.getLocation().getLatitude(), listing.getLocation().getLongitude());
         map.addMarker(new MarkerOptions().position(deviceLocation)).setTitle("Customer at:");
+        map.moveCamera(CameraUpdateFactory.zoomTo(15));
         map.moveCamera(CameraUpdateFactory.newLatLng(deviceLocation));
     }
 
