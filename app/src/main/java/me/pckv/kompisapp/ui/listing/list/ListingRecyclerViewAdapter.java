@@ -15,11 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.fastjson.JSON;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.ui.listing.view.ListingActivity;
 
 /**
@@ -28,10 +30,15 @@ import me.pckv.kompisapp.ui.listing.view.ListingActivity;
  */
 public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecyclerViewAdapter.ViewHolder> implements Filterable {
 
+    private static final int MAXIMUM_DISTANCE = 100;
+
     private final List<Listing> mValues;
     private final List<Listing> mValuesFull;
+    private Location location;
+
     private Context mContext;
     private Repository repository;
+
     private Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -61,18 +68,25 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
         repository = Repository.getInstance();
         mContext = context;
 
-        removeInactive(listings);
+        hideAndSort(listings);
+
         mValues = listings;
         mValuesFull = new ArrayList<>(mValues);
     }
 
     public void updateListings(List<Listing> listings) {
-        removeInactive(listings);
+        hideAndSort(listings);
+
         mValues.clear();
         mValuesFull.clear();
         mValues.addAll(listings);
         mValuesFull.addAll(listings);
         notifyDataSetChanged();
+    }
+
+    public void updateLocation(Location location) {
+        this.location = location;
+        updateListings(new ArrayList<>(mValuesFull));
     }
 
     @Override
@@ -88,7 +102,10 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
         holder.mListing = listing;
         holder.mTitleView.setText(listing.getTitle());
         holder.mOwnerNameView.setText(String.format(mContext.getString(R.string.owner_label), listing.getOwner().getDisplayName()));
-        holder.mDistanceView.setText(String.format(mContext.getString(R.string.distance_label), mContext.getString(R.string.default_distance)));
+
+        if (location != null) {
+            holder.mDistanceView.setText(String.format(mContext.getString(R.string.distance_label), location.distanceTo(listing.getLocation())));
+        }
 
         holder.mView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, ListingActivity.class);
@@ -102,8 +119,16 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
         return mValues.size();
     }
 
-    private void removeInactive(List<Listing> listings) {
+    private void hideAndSort(List<Listing> listings) {
+        // Hide inactive listings
         listings.removeIf(listing -> (!listing.isActive() && !repository.isOwner(listing)));
+
+        // Sort by distance and remove listings too far away
+        if (location != null) {
+            Collections.sort(listings, (o1, o2) ->
+                    Double.compare(location.distanceTo(o1.getLocation()), location.distanceTo(o2.getLocation())));
+            listings.removeIf(listing -> location.distanceTo(listing.getLocation()) > MAXIMUM_DISTANCE);
+        }
     }
 
     @Override

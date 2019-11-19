@@ -103,12 +103,10 @@ public class ListingsActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(itemDecoration);
         adapter = new ListingRecyclerViewAdapter(this, listings);
         recyclerView.setAdapter(adapter);
-        adapter.getFilter().filter("");
     }
 
     private void updateRecyclerView(List<Listing> listings) {
         adapter.updateListings(listings);
-        adapter.getFilter().filter("");
     }
 
     private void showGetListingsFailed() {
@@ -199,11 +197,12 @@ public class ListingsActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         mLastLocation = task.getResult();
+                        adapter.updateLocation(me.pckv.kompisapp.data.model.Location.fromAndroidLocation(mLastLocation));
+
                         if (startCreateActivity) {
                             Intent createListingIntent = new Intent(ListingsActivity.this, CreateListingActivity.class);
-                            me.pckv.kompisapp.data.model.Location location = new me.pckv.kompisapp.data.model.Location(
-                                    (float) mLastLocation.getLatitude(), (float) mLastLocation.getLongitude(), mLastLocation.getAccuracy());
-                            createListingIntent.putExtra("locationJson", JSON.toJSONString(location));
+                            createListingIntent.putExtra("locationJson", JSON.toJSONString(
+                                    me.pckv.kompisapp.data.model.Location.fromAndroidLocation(mLastLocation)));
                             startActivityForResult(createListingIntent, REFRESH_LISTINGS_REQUEST);
                         }
                     } else {

@@ -64,7 +64,7 @@
 
     <string name="owner_label">Owner %s</string>
     <string name="assignee_label">Assignee %s</string>
-    <string name="distance_label">Distance %s</string>
+    <string name="distance_label">Distance %.1f km</string>
     <string name="default_distance">5 km</string>
 
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
@@ -74,7 +74,6 @@
     <string name="no_location_detected">
         No location detected. Make sure location is enabled on the device.
     </string>
-    <string name="google_maps_api_key"></string>
 
 
 </resources>
