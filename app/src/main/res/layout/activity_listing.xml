@@ -100,7 +100,8 @@
             android:paddingRight="5dp"
             android:paddingBottom="1dp"
             android:text="@string/listing_assign"
-            android:track="@color/textFieldBackground" />
+            android:track="@color/textFieldBackground"
+            android:textColor="@color/textColor" />
 
         <Switch
             android:id="@+id/activate"
@@ -113,7 +114,8 @@
             android:paddingRight="5dp"
             android:paddingBottom="1dp"
             android:text="@string/listing_activate"
-            android:track="@color/textFieldBackground" />
+            android:track="@color/textFieldBackground"
+            android:textColor="@color/textColor" />
 
         <RelativeLayout
             android:layout_width="match_parent"
