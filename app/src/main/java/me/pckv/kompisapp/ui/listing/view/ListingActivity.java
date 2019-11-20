@@ -236,10 +236,14 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
             return;
         }
         map.setMyLocationEnabled(true);
-        LatLng deviceLocation = new LatLng(listing.getLocation().getLatitude(), listing.getLocation().getLongitude());
-        map.addMarker(new MarkerOptions().position(deviceLocation)).setTitle(listing.getOwner().getDisplayName());
+        LatLng ownerLocation = new LatLng(listing.getLocation().getLatitude(), listing.getLocation().getLongitude());
+        map.addMarker(new MarkerOptions().position(ownerLocation)).setTitle(listing.getOwner().getDisplayName());
+        if (listing.hasAssignee()) {
+            LatLng assigneeLocation = new LatLng(listing.getAssignee().getLocation().getLatitude(), listing.getAssignee().getLocation().getLongitude());
+            map.addMarker(new MarkerOptions().position(assigneeLocation)).setTitle(listing.getAssignee().getUser().getDisplayName());
+        }
         map.moveCamera(CameraUpdateFactory.zoomTo(15));
-        map.moveCamera(CameraUpdateFactory.newLatLng(deviceLocation));
+        map.moveCamera(CameraUpdateFactory.newLatLng(ownerLocation));
     }
 
     @Override
