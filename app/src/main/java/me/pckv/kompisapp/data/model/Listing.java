@@ -17,6 +17,8 @@ public class Listing {
     @Nullable
     private User assignee;
 
+    private double distance;
+
     public boolean hasAssignee() {
         return assignee != null;
     }
