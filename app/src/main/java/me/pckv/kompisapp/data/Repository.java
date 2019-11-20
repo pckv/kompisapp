@@ -27,7 +27,7 @@ public class Repository {
 
     private Repository() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.87:8080/")
+                .baseUrl("http://kompis.pckv.me:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
