@@ -2,6 +2,5 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">kompis.pckv.me</domain>
-        <domain includeSubdomains="true">192.168.1.87</domain>
     </domain-config>
 </network-security-config>
