@@ -20,22 +20,26 @@ import java.util.List;
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.ui.listing.view.ListingActivity;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Listing} and makes a call to the
  * specified.
  */
-public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecyclerViewAdapter.ViewHolder> implements Filterable {
+public class ListingsRecyclerViewAdapter extends RecyclerView.Adapter<ListingsRecyclerViewAdapter.ViewHolder> implements Filterable {
 
-    private final List<Listing> mValues;
-    private final List<Listing> mValuesFull;
-    private Context mContext;
+    private final List<Listing> listings;
+    private final List<Listing> listingsFull;
+    private Location location;
+
+    private Context context;
     private Repository repository;
+
     private Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<Listing> filteredList = new ArrayList<>(mValuesFull);
+            List<Listing> filteredList = new ArrayList<>(listingsFull);
 
             // If a constraint is given, remove any item that does not match the filter
             if (constraint != null && constraint.length() > 0) {
@@ -51,28 +55,29 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            mValues.clear();
-            mValues.addAll((List) results.values);
+            listings.clear();
+            listings.addAll((List) results.values);
             notifyDataSetChanged();
         }
     };
 
-    public ListingRecyclerViewAdapter(Context context, List<Listing> listings) {
+    public ListingsRecyclerViewAdapter(Context context) {
         repository = Repository.getInstance();
-        mContext = context;
-
-        removeInactive(listings);
-        mValues = listings;
-        mValuesFull = new ArrayList<>(mValues);
+        this.context = context;
+        listings = new ArrayList<>();
+        listingsFull = new ArrayList<>();
     }
 
-    public void updateListings(List<Listing> listings) {
-        removeInactive(listings);
-        mValues.clear();
-        mValuesFull.clear();
-        mValues.addAll(listings);
-        mValuesFull.addAll(listings);
+    public void setListings(List<Listing> listings) {
+        this.listings.clear();
+        this.listings.addAll(listings);
+        listingsFull.clear();
+        listingsFull.addAll(listings);
         notifyDataSetChanged();
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     @Override
@@ -83,27 +88,24 @@ public class ListingRecyclerViewAdapter extends RecyclerView.Adapter<ListingRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Listing listing = mValues.get(position);
+        final Listing listing = listings.get(position);
 
         holder.mListing = listing;
         holder.mTitleView.setText(listing.getTitle());
-        holder.mOwnerNameView.setText(String.format(mContext.getString(R.string.owner_label), listing.getOwner().getDisplayName()));
-        holder.mDistanceView.setText(String.format(mContext.getString(R.string.distance_label), mContext.getString(R.string.default_distance)));
+        holder.mOwnerNameView.setText(String.format(context.getString(R.string.owner_label), listing.getOwner().getDisplayName()));
+        holder.mDistanceView.setText(String.format(context.getString(R.string.distance_label), listing.getDistance()));
 
         holder.mView.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, ListingActivity.class);
+            Intent intent = new Intent(context, ListingActivity.class);
             intent.putExtra("listingJson", JSON.toJSONString(listing));
-            ((Activity) mContext).startActivityForResult(intent, ListingsActivity.REFRESH_LISTINGS_REQUEST);
+            intent.putExtra("locationJson", JSON.toJSONString(location));
+            ((Activity) context).startActivityForResult(intent, ListingsActivity.REFRESH_LISTINGS_REQUEST);
         });
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
-    }
-
-    private void removeInactive(List<Listing> listings) {
-        listings.removeIf(listing -> (!listing.isActive() && !repository.isOwner(listing)));
+        return listings.size();
     }
 
     @Override

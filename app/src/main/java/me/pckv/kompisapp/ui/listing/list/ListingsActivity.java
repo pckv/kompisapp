@@ -33,11 +33,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.List;
-
 import me.pckv.kompisapp.BuildConfig;
 import me.pckv.kompisapp.R;
-import me.pckv.kompisapp.data.model.Listing;
 import me.pckv.kompisapp.ui.listing.create.CreateListingActivity;
 import me.pckv.kompisapp.ui.user.login.LoginActivity;
 
@@ -49,9 +46,8 @@ public class ListingsActivity extends AppCompatActivity {
     /**
      * Represents a geographical location.
      */
-    protected Location mLastLocation;
     private ListingsViewModel listingsViewModel;
-    private ListingRecyclerViewAdapter adapter = null;
+    private ListingsRecyclerViewAdapter adapter = null;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     /**
      * Provides the entry point to the Fused Location Provider API.
@@ -66,53 +62,54 @@ public class ListingsActivity extends AppCompatActivity {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation(false);
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-
         fab.setOnClickListener(view -> getLastLocation(true));
 
+        // Initialize empty recycler view that will be updated dynamically with the ViewModel
+        setUpRecyclerView();
+
+        // Handle error on fetching of listings
         listingsViewModel.getListingsResult().observe(this, listingsResult -> {
             if (listingsResult.isError()) {
                 showGetListingsFailed();
             }
-            if (listingsResult.isSuccess()) {
-                if (adapter == null) {
-                    setUpRecyclerView(listingsResult.getSuccess());
-                } else {
-                    updateRecyclerView(listingsResult.getSuccess());
-                }
-
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
         });
 
-        listingsViewModel.getListings();
+        // Update listings in the recycler view
+        listingsViewModel.getListings().observe(this, listings -> {
+            adapter.setListings(listings);
+            mSwipeRefreshLayout.setRefreshing(false);
+        });
 
+        // Update location in the recycler view
+        listingsViewModel.getLocation().observe(this, location -> adapter.setLocation(location));
+
+        // Fetch new listings
+        listingsViewModel.getListOfListings();
+
+        // Refresh handler will fetch updated listings and refresh the location
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> listingsViewModel.getListings());
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            listingsViewModel.getListOfListings();
+            getLastLocation(false);
+        });
     }
 
-    private void setUpRecyclerView(List<Listing> listings) {
+    private void setUpRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         DividerItemDecoration itemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
-        adapter = new ListingRecyclerViewAdapter(this, listings);
+        adapter = new ListingsRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
-        adapter.getFilter().filter("");
-    }
-
-    private void updateRecyclerView(List<Listing> listings) {
-        adapter.updateListings(listings);
-        adapter.getFilter().filter("");
     }
 
     private void showGetListingsFailed() {
-        Toast.makeText(getApplicationContext(), R.string.create_listing_failed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.get_listings_failed, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -120,7 +117,7 @@ public class ListingsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REFRESH_LISTINGS_REQUEST && resultCode == RESULT_OK) {
-            listingsViewModel.getListings();
+            listingsViewModel.getListOfListings();
         }
     }
 
@@ -198,12 +195,13 @@ public class ListingsActivity extends AppCompatActivity {
         mFusedLocationClient.getLastLocation()
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
-                        mLastLocation = task.getResult();
+                        Location location = task.getResult();
+                        listingsViewModel.setLocation(location);
+
                         if (startCreateActivity) {
                             Intent createListingIntent = new Intent(ListingsActivity.this, CreateListingActivity.class);
-                            me.pckv.kompisapp.data.model.Location location = new me.pckv.kompisapp.data.model.Location(
-                                    (float) mLastLocation.getLatitude(), (float) mLastLocation.getLongitude(), mLastLocation.getAccuracy());
-                            createListingIntent.putExtra("locationJson", JSON.toJSONString(location));
+                            createListingIntent.putExtra("locationJson", JSON.toJSONString(
+                                    me.pckv.kompisapp.data.model.Location.fromAndroidLocation(location)));
                             startActivityForResult(createListingIntent, REFRESH_LISTINGS_REQUEST);
                         }
                     } else {
