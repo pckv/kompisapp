@@ -26,10 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.Map;
 
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.HttpStatusException;
@@ -39,9 +36,8 @@ import me.pckv.kompisapp.databinding.ActivityListingBinding;
 
 public class ListingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private ListingViewModel listingViewModel;
-
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    private ListingViewModel listingViewModel;
     private MapView mMapView;
     private Listing listing;
 
@@ -163,13 +159,20 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void showDeleteListingDialog() {
-        new AlertDialog.Builder(this)
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.delete_listing_dialog)
                 .setMessage(R.string.delete_listing_dialog_message)
                 .setCancelable(true)
                 .setPositiveButton(R.string.prompt_yes, ((dialog, which) -> listingViewModel.deleteListing()))
                 .setNegativeButton(R.string.prompt_no, null)
-                .show();
+                .create();
+        alertDialog.setOnShowListener(arg0 -> {
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
+                    getResources().getColor(R.color.lightBtnTextColor));
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
+                    getResources().getColor(R.color.lightBtnTextColor));
+        });
+        alertDialog.show();
     }
 
     private void showChangeSwitchSuccess(@StringRes Integer successString) {
