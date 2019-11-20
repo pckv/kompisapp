@@ -5,6 +5,7 @@ import java.util.List;
 import me.pckv.kompisapp.data.model.CreateListing;
 import me.pckv.kompisapp.data.model.CreateUser;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.data.model.LoginUser;
 import me.pckv.kompisapp.data.model.User;
 import retrofit2.Call;
@@ -41,8 +42,8 @@ public interface KompisService {
     @GET("/listings/{id}/deactivate")
     Call<Void> deactivateListing(@Header("Authorization") String auth, @Path("id") long listingId);
 
-    @GET("/listings/{id}/assign")
-    Call<Void> assignListing(@Header("Authorization") String auth, @Path("id") long listingId);
+    @POST("/listings/{id}/assign")
+    Call<Void> assignListing(@Header("Authorization") String auth, @Path("id") long listingId, @Body Location location);
 
     @GET("/listings/{id}/unassign")
     Call<Void> unassignListing(@Header("Authorization") String auth, @Path("id") long listingId);

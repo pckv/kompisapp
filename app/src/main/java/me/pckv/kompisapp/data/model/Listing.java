@@ -15,7 +15,7 @@ public class Listing {
     private User owner;
 
     @Nullable
-    private User assignee;
+    private Assignee assignee;
 
     private double distance;
 

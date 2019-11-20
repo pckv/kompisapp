@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.HttpStatusException;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.databinding.ActivityListingBinding;
 
 public class ListingActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -61,8 +62,9 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
         initGoogleMap(savedInstanceState);
 
         listing = JSON.parseObject(extras.getString("listingJson"), Listing.class);
+        Location location = JSON.parseObject(extras.getString("locationJson"), Location.class);
 
-        listingViewModel = ViewModelProviders.of(this, new ListingViewModelFactory(listing))
+        listingViewModel = ViewModelProviders.of(this, new ListingViewModelFactory(listing, location))
                 .get(ListingViewModel.class);
 
         binding.setViewmodel(listingViewModel);
@@ -233,10 +235,14 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
             return;
         }
         map.setMyLocationEnabled(true);
-        LatLng deviceLocation = new LatLng(listing.getLocation().getLatitude(), listing.getLocation().getLongitude());
-        map.addMarker(new MarkerOptions().position(deviceLocation)).setTitle(listing.getOwner().getDisplayName());
+        LatLng ownerLocation = new LatLng(listing.getLocation().getLatitude(), listing.getLocation().getLongitude());
+        map.addMarker(new MarkerOptions().position(ownerLocation)).setTitle(listing.getOwner().getDisplayName());
+        if (listing.hasAssignee()) {
+            LatLng assigneeLocation = new LatLng(listing.getAssignee().getLocation().getLatitude(), listing.getAssignee().getLocation().getLongitude());
+            map.addMarker(new MarkerOptions().position(assigneeLocation)).setTitle(listing.getAssignee().getUser().getDisplayName());
+        }
         map.moveCamera(CameraUpdateFactory.zoomTo(15));
-        map.moveCamera(CameraUpdateFactory.newLatLng(deviceLocation));
+        map.moveCamera(CameraUpdateFactory.newLatLng(ownerLocation));
     }
 
     @Override
