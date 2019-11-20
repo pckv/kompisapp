@@ -41,7 +41,6 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     private MapView mMapView;
     private Listing listing;
-    private Location location;
 
 
     @Override
@@ -63,7 +62,7 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
         initGoogleMap(savedInstanceState);
 
         listing = JSON.parseObject(extras.getString("listingJson"), Listing.class);
-        location = JSON.parseObject(extras.getString("locationJson"), Location.class);
+        Location location = JSON.parseObject(extras.getString("locationJson"), Location.class);
 
         listingViewModel = ViewModelProviders.of(this, new ListingViewModelFactory(listing, location))
                 .get(ListingViewModel.class);
