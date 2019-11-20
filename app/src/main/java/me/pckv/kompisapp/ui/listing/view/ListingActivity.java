@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.HttpStatusException;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.databinding.ActivityListingBinding;
 
 public class ListingActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -40,6 +41,7 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     private MapView mMapView;
     private Listing listing;
+    private Location location;
 
 
     @Override
@@ -61,8 +63,9 @@ public class ListingActivity extends AppCompatActivity implements OnMapReadyCall
         initGoogleMap(savedInstanceState);
 
         listing = JSON.parseObject(extras.getString("listingJson"), Listing.class);
+        location = JSON.parseObject(extras.getString("locationJson"), Location.class);
 
-        listingViewModel = ViewModelProviders.of(this, new ListingViewModelFactory(listing))
+        listingViewModel = ViewModelProviders.of(this, new ListingViewModelFactory(listing, location))
                 .get(ListingViewModel.class);
 
         binding.setViewmodel(listingViewModel);

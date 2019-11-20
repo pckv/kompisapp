@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel;
 
 import lombok.Getter;
 import me.pckv.kompisapp.data.Repository;
+import me.pckv.kompisapp.data.model.Assignee;
 import me.pckv.kompisapp.data.model.Listing;
+import me.pckv.kompisapp.data.model.Location;
 import me.pckv.kompisapp.ui.TaskResult;
 import me.pckv.kompisapp.ui.UiAsyncTask;
 
@@ -16,6 +18,8 @@ public class ListingViewModel extends ViewModel {
     @Getter
     private Listing listing;
 
+    private Location location;
+
     @Getter
     private MutableLiveData<TaskResult<Boolean>> deleteResult = new MutableLiveData<>();
     @Getter
@@ -23,9 +27,10 @@ public class ListingViewModel extends ViewModel {
     @Getter
     private MutableLiveData<TaskResult<Boolean>> assignResult = new MutableLiveData<>();
 
-    public ListingViewModel(Listing listing) {
+    public ListingViewModel(Listing listing, Location location) {
         this.repository = Repository.getInstance();
         this.listing = listing;
+        this.location = location;
     }
 
     public boolean isOwner() {
@@ -63,9 +68,9 @@ public class ListingViewModel extends ViewModel {
 
     public void assignListing() {
         UiAsyncTask.executeAndUpdate(assignResult, () -> {
-            repository.assignListing(listing.getId());
+            repository.assignListing(listing.getId(), location);
             return true;
-        }, result -> listing.setAssignee(repository.getLoggedInAsUser()));
+        }, result -> listing.setAssignee(new Assignee(repository.getLoggedInAsUser(), location)));
     }
 
     public void unassignListing() {

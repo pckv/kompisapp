@@ -27,7 +27,7 @@ public class Repository {
 
     private Repository() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://kompis.pckv.me:8080/")
+                .baseUrl("http://192.168.1.87:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -67,7 +67,7 @@ public class Repository {
             return false;
         }
 
-        return loggedInUser.getId() == listing.getAssignee().getId();
+        return loggedInUser.getId() == listing.getAssignee().getUser().getId();
     }
 
     private <T> Response<T> execute(Call<T> call) throws HttpStatusException {
@@ -140,8 +140,8 @@ public class Repository {
         execute(service.deactivateListing(getAuthorization(), listingId));
     }
 
-    public void assignListing(long listingId) throws HttpStatusException {
-        execute(service.assignListing(getAuthorization(), listingId));
+    public void assignListing(long listingId, Location location) throws HttpStatusException {
+        execute(service.assignListing(getAuthorization(), listingId, location));
     }
 
     public void unassignListing(long listingId) throws HttpStatusException {
