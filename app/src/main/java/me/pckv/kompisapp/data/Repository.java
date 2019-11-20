@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import java.io.IOException;
 import java.util.List;
 
+import lombok.Getter;
 import me.pckv.kompisapp.data.model.CreateListing;
 import me.pckv.kompisapp.data.model.CreateUser;
 import me.pckv.kompisapp.data.model.Listing;
@@ -24,6 +25,9 @@ public class Repository {
 
     private KompisService service;
     private LoggedInUser loggedInUser;
+
+    @Getter
+    private String firebaseToken;
 
     private Repository() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -95,7 +99,7 @@ public class Repository {
     }
 
     public LoggedInUser authorize(String email, String password) throws HttpStatusException {
-        Response<User> response = execute(service.authorize(new LoginUser(email, password)));
+        Response<User> response = execute(service.authorize(new LoginUser(email, password, firebaseToken)));
 
         String authorization = response.headers().get("Authorization");
         if (authorization == null) {
@@ -118,6 +122,14 @@ public class Repository {
         // Update the logged in user with potentially new data from API
         this.loggedInUser = new LoggedInUser(loggedInUser.getToken(), user.getId(), loggedInUser.getEmail(), user.getDisplayName());
         return this.loggedInUser;
+    }
+
+    public void setFirebaseToken(String token) throws HttpStatusException {
+        firebaseToken = token;
+
+        if (isLoggedIn()) {
+            execute(service.putFirebaseToken(getAuthorization(), token));
+        }
     }
 
     public List<Listing> getListings() throws HttpStatusException {

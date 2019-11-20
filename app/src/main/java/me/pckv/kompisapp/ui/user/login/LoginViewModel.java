@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -13,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 
 import lombok.Getter;
 import me.pckv.kompisapp.R;
+import me.pckv.kompisapp.data.HttpStatusException;
 import me.pckv.kompisapp.data.Repository;
 import me.pckv.kompisapp.data.model.LoggedInUser;
 import me.pckv.kompisapp.ui.TaskResult;
@@ -35,6 +38,23 @@ public class LoginViewModel extends AndroidViewModel {
 
         sharedPreferences = application.getSharedPreferences(
                 application.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void setFirebaseToken(String token) {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    repository.setFirebaseToken(token);
+                } catch (HttpStatusException e) {
+                    Log.d("LoginViewModel", "Failed to send firebase token to server");
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
     }
 
     private void updateLoggedInUser(LoggedInUser loggedInUser) {

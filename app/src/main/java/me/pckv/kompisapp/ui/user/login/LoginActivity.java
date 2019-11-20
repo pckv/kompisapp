@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import me.pckv.kompisapp.R;
 import me.pckv.kompisapp.data.model.LoggedInUser;
 import me.pckv.kompisapp.databinding.ActivityLoginBinding;
@@ -71,6 +73,10 @@ public class LoginActivity extends AppCompatActivity {
 
         // Bind the create user button
         binding.createUser.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, CreateUserActivity.class)));
+
+        // Add firebase token to repository
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(
+                instanceIdResult -> loginViewModel.setFirebaseToken(instanceIdResult.getToken()));
     }
 
     private void login() {

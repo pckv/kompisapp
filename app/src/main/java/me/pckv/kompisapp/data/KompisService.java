@@ -14,7 +14,9 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface KompisService {
 
@@ -26,6 +28,9 @@ public interface KompisService {
 
     @GET("/users/current")
     Call<User> getCurrentUser(@Header("Authorization") String auth);
+
+    @PUT("/users/current/firebase")
+    Call<Void> putFirebaseToken(@Header("Authorization") String auth, @Query("token") String token);
 
     @GET("/listings")
     Call<List<Listing>> getListings(@Header("Authorization") String auth);
