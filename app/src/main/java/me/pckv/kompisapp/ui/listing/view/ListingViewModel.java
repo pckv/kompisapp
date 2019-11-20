@@ -45,6 +45,10 @@ public class ListingViewModel extends ViewModel {
         return isOwner() || (!listing.hasAssignee() || isAssignee());
     }
 
+    public boolean showOwnerUnassign() {
+        return isOwner() && (listing.hasAssignee() && !isAssignee());
+    }
+
     public void deleteListing() {
         UiAsyncTask.executeAndUpdate(deleteResult, () -> {
             repository.deleteListing(listing.getId());

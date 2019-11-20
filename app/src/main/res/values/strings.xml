@@ -51,6 +51,7 @@
 
     <string name="assignee">Assignee</string>
     <string name="listing_assign">Assign yourself to this listing</string>
+    <string name="owner_unassign">Unassign %s from this listing</string>
     <string name="listing_activate">Activate listing</string>
     <string name="listing_activated">Activated listing</string>
     <string name="listing_deactivated">Deactivated listing</string>
