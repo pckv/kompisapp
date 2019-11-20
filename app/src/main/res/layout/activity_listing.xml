@@ -94,7 +94,7 @@
             android:paddingTop="1dp"
             android:paddingRight="5dp"
             android:paddingBottom="1dp"
-            android:text="@string/listing_assign" />
+            android:text="@{viewmodel.showOwnerUnassign() ? String.format(@string/owner_unassign, viewmodel.listing.assignee.user.displayName) : @string/listing_assign}" />
 
         <Switch
             android:id="@+id/activate"
