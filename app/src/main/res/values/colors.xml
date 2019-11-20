@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#535353</color>
     <color name="colorAccent">#D81B60</color>
     <color name="textColor">#FFFFFF</color>
+    <color name="lightBtnTextColor">#000000</color>
     <color name="textFieldBackground">#4D4D4D</color>
-    <color name="textFieldLine">#0c53e2</color>
+    <color name="textFieldLine">#FFFFFF</color>
 </resources>
