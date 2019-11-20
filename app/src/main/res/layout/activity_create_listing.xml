@@ -18,7 +18,9 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
+        android:background="@color/colorPrimary"
         tools:context=".ui.user.create.CreateUserActivity">
+
 
         <EditText
             android:id="@+id/title"
@@ -32,6 +34,9 @@
             android:inputType="text"
             android:selectAllOnFocus="true"
             android:text="@={form.getField(@id/title)}"
+            android:textColor="@color/textColor"
+            android:backgroundTint="@color/textFieldLine"
+            android:textColorHint="@color/textColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -44,6 +49,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/create_listing_driver"
+            android:textColor="@color/textColor"
+            android:track="@color/textFieldBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
@@ -58,6 +65,7 @@
             android:layout_marginEnd="8dp"
             android:enabled="@{form.valid}"
             android:text="@string/action_create_listing"
+            android:textColor="@color/lightBtnTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/driver" />
@@ -84,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="@{form.error}"
-            android:textColor="#F73C3C"
+            android:textColor="#FF0000"
             app:layout_constraintBottom_toTopOf="@+id/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

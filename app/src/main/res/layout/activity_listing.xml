@@ -13,6 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -39,6 +40,7 @@
             android:paddingBottom="1dp"
             android:text="@{viewmodel.listing.title}"
             android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/textColor"
             tools:text="Title" />
 
         <LinearLayout
@@ -56,6 +58,7 @@
                 android:paddingRight="5dp"
                 android:paddingBottom="1dp"
                 android:text="@{String.format(@string/owner_label, viewmodel.listing.owner.displayName)}"
+                android:textColor="@color/textColor"
                 tools:text="Owner" />
 
             <TextView
@@ -69,6 +72,7 @@
                 android:paddingBottom="1dp"
                 android:text="@{String.format(@string/distance_label, viewmodel.listing.distance)}"
                 android:textAlignment="textEnd"
+                android:textColor="@color/textColor"
                 tools:text="5km" />
         </LinearLayout>
 
@@ -82,6 +86,7 @@
             android:paddingBottom="1dp"
             android:text="@{String.format(@string/assignee_label, viewmodel.listing.assignee.user.displayName)}"
             android:visibility="@{viewmodel.listing.hasAssignee() ? View.VISIBLE : View.GONE}"
+            android:textColor="@color/textColor"
             tools:text="Assignee" />
 
         <Switch
@@ -94,7 +99,9 @@
             android:paddingTop="1dp"
             android:paddingRight="5dp"
             android:paddingBottom="1dp"
-            android:text="@{viewmodel.showOwnerUnassign() ? String.format(@string/owner_unassign, viewmodel.listing.assignee.user.displayName) : @string/listing_assign}" />
+            android:text="@{viewmodel.showOwnerUnassign() ? String.format(@string/owner_unassign, viewmodel.listing.assignee.user.displayName) : @string/listing_assign}"
+            android:track="@color/textFieldBackground"
+            android:textColor="@color/textColor" />
 
         <Switch
             android:id="@+id/activate"
@@ -106,7 +113,9 @@
             android:paddingTop="1dp"
             android:paddingRight="5dp"
             android:paddingBottom="1dp"
-            android:text="@string/listing_activate" />
+            android:text="@string/listing_activate"
+            android:track="@color/textFieldBackground"
+            android:textColor="@color/textColor" />
 
         <RelativeLayout
             android:layout_width="match_parent"
