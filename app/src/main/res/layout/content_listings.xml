@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/swipe_refresh"
-    android:background="@color/colorPrimary"
-    android:backgroundTint="@color/textFieldLine"
     tools:context=".ui.listing.list.ListingsActivity"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_listings">
@@ -14,5 +12,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary" />
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

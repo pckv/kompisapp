@@ -50,6 +50,7 @@
             android:layout_marginEnd="8dp"
             android:text="@string/create_listing_driver"
             android:textColor="@color/textColor"
+            android:track="@color/textFieldBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
